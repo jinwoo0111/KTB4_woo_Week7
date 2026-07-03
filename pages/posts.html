@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 목록</title>
+
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/posts.css">
+</head>
+<body>
+  <header class="page-header">
+    <h1 class="page-header-title">아무 말 대잔치</h1>
+
+    <button class="header-profile-button" type="button">
+      <!-- 실제 이미지가 없으면 img 태그는 나중에 넣어도 됩니다. -->
+    </button>
+  </header>
+
+  <main class="posts-main">
+    <section class="posts-intro">
+      <p>
+        안녕하세요,<br>
+        아무 말 대잔치 <strong>게시판</strong> 입니다.
+      </p>
+    </section>
+
+    <div class="write-button-wrapper">
+      <button class="write-post-button" type="button">
+        게시글 작성
+      </button>
+    </div>
+
+    <section class="post-list" id="post-list">
+      <!-- 정적 화면 확인용 더미 게시글 카드입니다.
+           나중에 Fetch 단계에서 서버 데이터로 렌더링할 예정입니다. -->
+
+      <article class="post-card" data-post-id="1">
+        <div class="post-card-content">
+          <h2 class="post-title">제목 1</h2>
+
+          <div class="post-info-row">
+            <div class="post-stats">
+              <span>좋아요 0</span>
+              <span>댓글 0</span>
+              <span>조회수 0</span>
+            </div>
+
+            <time class="post-date">2021-01-01 00:00:00</time>
+          </div>
+        </div>
+
+        <div class="post-author-row">
+          <div class="author-profile"></div>
+          <span class="author-name">더미 작성자 1</span>
+        </div>
+      </article>
+
+      <article class="post-card" data-post-id="2">
+        <div class="post-card-content">
+          <h2 class="post-title">제목 1</h2>
+
+          <div class="post-info-row">
+            <div class="post-stats">
+              <span>좋아요 0</span>
+              <span>댓글 0</span>
+              <span>조회수 0</span>
+            </div>
+
+            <time class="post-date">2021-01-01 00:00:00</time>
+          </div>
+        </div>
+
+        <div class="post-author-row">
+          <div class="author-profile"></div>
+          <span class="author-name">더미 작성자 1</span>
+        </div>
+      </article>
+
+      <article class="post-card" data-post-id="3">
+        <div class="post-card-content">
+          <h2 class="post-title">제목 1</h2>
+
+          <div class="post-info-row">
+            <div class="post-stats">
+              <span>좋아요 0</span>
+              <span>댓글 0</span>
+              <span>조회수 0</span>
+            </div>
+
+            <time class="post-date">2021-01-01 00:00:00</time>
+          </div>
+        </div>
+
+        <div class="post-author-row">
+          <div class="author-profile"></div>
+          <span class="author-name">더미 작성자 1</span>
+        </div>
+      </article>
+
+      <article class="post-card" data-post-id="4">
+        <div class="post-card-content">
+          <h2 class="post-title">제목 1</h2>
+
+          <div class="post-info-row">
+            <div class="post-stats">
+              <span>좋아요 0</span>
+              <span>댓글 0</span>
+              <span>조회수 0</span>
+            </div>
+
+            <time class="post-date">2021-01-01 00:00:00</time>
+          </div>
+        </div>
+
+        <div class="post-author-row">
+          <div class="author-profile"></div>
+          <span class="author-name">더미 작성자 1</span>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="../js/posts.js"></script>
+</body>
+</html>

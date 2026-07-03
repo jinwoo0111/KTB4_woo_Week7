@@ -1,0 +1,63 @@
+.signup-main {
+  padding-top: 100px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.profile-label {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.profile-upload {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #c4c4c4;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: #555;
+  font-size: 28px;
+  cursor: pointer;
+
+  overflow: hidden;
+}
+
+.profile-plus-icon {
+  font-size: 28px;
+  color: #555;
+}
+
+.profile-preview-image {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-input {
+  display: none;
+}
+
+.signup-button {
+  margin-top: 4px;
+}
+
+.login-link-button {
+  margin-top: 0;
+}

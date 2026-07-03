@@ -1,0 +1,116 @@
+.posts-main {
+  width: 592px;
+  max-width: calc(100% - 32px);
+  margin: 0 auto;
+  padding-top: 32px;
+}
+
+.header-profile-button {
+  position: absolute;
+  right: calc(50% - 240px);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+  overflow: hidden;
+}
+
+.posts-intro {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.posts-intro p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.write-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.write-post-button {
+  width: 138px;
+  height: 39px;
+  border: none;
+  border-radius: 16px;
+  background-color: #aca0eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.write-post-button:hover {
+  background-color: #7f6aee;
+}
+
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.post-card {
+  width: 100%;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.post-card-content {
+  padding: 20px 24px 18px 24px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.post-title {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: 700;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-stats {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.post-date {
+  font-size: 14px;
+}
+
+.post-author-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+}
+
+.author-profile {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+}
+
+.author-name {
+  font-size: 14px;
+  font-weight: 700;
+}

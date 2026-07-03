@@ -1,0 +1,239 @@
+.user-edit-main {
+  width: 392px;
+  margin: 0 auto;
+  padding-top: 120px;
+}
+
+.user-edit-title {
+  margin: 0 0 32px 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* 상단 프로필 + 드롭다운 */
+.header-profile-area {
+  position: absolute;
+  right: calc(50% - 190px);
+  top: 16px;
+}
+
+.header-profile-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+  cursor: pointer;
+}
+
+/*
+  정적 화면 확인 단계에서는 드롭다운을 보이게 둡니다.
+  JS 단계에서는 display: none으로 바꾸고,
+  클릭 시 .is-open class를 붙여 열리게 만듭니다.
+*/
+.profile-dropdown {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  width: 140px;
+  background-color: #d9d9d9;
+
+  display: none;
+  flex-direction: column;
+
+  z-index: 10;
+}
+
+.profile-dropdown.is-open {
+  display: flex;
+}
+
+.dropdown-item {
+  width: 100%;
+  height: 44px;
+  border: none;
+  background-color: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #e9e9e9;
+}
+
+/* 프로필 이미지 수정 영역 */
+.profile-edit-section {
+  margin-bottom: 32px;
+}
+
+.profile-section-label {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.profile-image-button {
+  width: 149px;
+  height: 149px;
+  margin: 0 auto;
+  border: none;
+  border-radius: 50%;
+  background-color: #8f8f8f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-size: cover;
+  background-position: center;
+
+  cursor: pointer;
+}
+
+.profile-change-text {
+  width: 52px;
+  height: 27px;
+  border-radius: 14px;
+  background-color: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  font-size: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 회원정보 form */
+.user-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.email-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.email-section .form-label {
+  margin: 0;
+}
+
+.user-email {
+  margin: 0;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+
+  font-size: 14px;
+}
+
+.nickname-input {
+  width: 100%;
+}
+
+.user-update-button {
+  margin-top: 4px;
+}
+
+.user-delete-button {
+  margin-top: 0;
+}
+
+/* 수정 완료 토스트 */
+.toast-message {
+  width: 120px;
+  height: 48px;
+  margin: 48px auto 0 auto;
+  border-radius: 24px;
+  background-color: #aca0eb;
+  color: white;
+  font-size: 16px;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+/*
+  JS 단계에서는 토스트를 처음에 숨기는 게 자연스럽습니다.
+  .toast-message.is-visible에서 display: flex를 주면 됩니다.
+*/
+.toast-message.is-visible {
+  display: flex;
+}
+
+/* 회원 탈퇴 모달 */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/*
+  정적 화면에서 모달 확인하고 싶을 때만
+  user-delete-modal에 is-open class를 붙이거나,
+  아래 display를 block으로 잠깐 바꾸면 됩니다.
+*/
+.modal-overlay.is-open {
+  display: block;
+}
+
+.confirm-modal {
+  width: 408px;
+  height: 242px;
+  border-radius: 12px;
+  background-color: #ffffff;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-modal-title {
+  margin: 0 0 24px 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.confirm-modal-description {
+  margin: 0 0 32px 0;
+  font-size: 16px;
+}
+
+.confirm-modal-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.modal-cancel-button,
+.modal-confirm-button {
+  width: 127px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modal-cancel-button {
+  background-color: #242424;
+  color: #ffffff;
+}
+
+.modal-confirm-button {
+  background-color: #c4a5fa;
+  color: #000000;
+}

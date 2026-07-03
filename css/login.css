@@ -1,0 +1,21 @@
+/* 로그인 페이지 본문 위치 */
+.login-main {
+  padding-top: 160px;
+}
+
+/* 로그인 form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 로그인 버튼은 helper text와 input 아래쪽에 조금 여유를 둠 */
+.login-button {
+  margin-top: 4px;
+}
+
+/* 회원가입 버튼 */
+.signup-button {
+  margin-top: 4px;
+}

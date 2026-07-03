@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 상세</title>
+
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/post-detail.css">
+</head>
+
+<body>
+  <header class="page-header">
+    <button class="back-button" type="button">&lt;</button>
+    <h1 class="page-header-title">아무 말 대잔치</h1>
+
+    <button class="header-profile-button" type="button"></button>
+  </header>
+
+  <main class="detail-main">
+    <article class="post-detail" data-post-id="1">
+      <div class="post-detail-header">
+        <h2 class="post-detail-title">제목 1</h2>
+
+        <div class="post-action-buttons">
+          <button class="outline-button edit-post-button" type="button">수정</button>
+          <button class="outline-button delete-post-button" type="button">삭제</button>
+        </div>
+      </div>
+
+      <div class="post-meta-row">
+        <div class="author-info">
+          <div class="author-profile"></div>
+          <span class="author-name">더미 작성자 1</span>
+        </div>
+
+        <time class="post-date">2021-01-01 00:00:00</time>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="post-image-placeholder"></div>
+
+      <p class="post-content">
+        무엇을 얘기할까요? 아무말이라면, 삶은 항상 놀라운 모험이라고 생각합니다.
+        우리는 매일 새로운 경험을 하고 배우며 성장합니다. 때로는 어려움과 도전이 있지만,
+        그것들이 우리를 더 강하고 지혜롭게 만듭니다. 또한 우리는 주변의 사람들과 연결되며
+        사랑과 지지를 받습니다. 그래서 우리의 삶은 소중하고 의미가 있습니다.
+      </p>
+
+      <div class="post-counts">
+        <button class="count-box like-button" type="button">
+          <strong>123</strong>
+          <span>좋아요수</span>
+        </button>
+
+        <div class="count-box">
+          <strong>123</strong>
+          <span>조회수</span>
+        </div>
+
+        <div class="count-box">
+          <strong>123</strong>
+          <span>댓글</span>
+        </div>
+      </div>
+    </article>
+
+    <section class="comment-write-section">
+      <textarea class="comment-input" placeholder="댓글을 남겨주세요!"></textarea>
+
+      <p class="helper-text comment-helper-text">
+        댓글을 입력해주세요.
+      </p>
+
+      <div class="comment-button-row">
+        <button class="comment-submit-button" type="button">
+          댓글 등록
+        </button>
+      </div>
+    </section>
+
+    <section class="comment-list">
+      <!-- 정적 화면 확인용 더미 댓글입니다. 나중에 서버 데이터로 렌더링할 예정입니다. -->
+
+      <article class="comment-item" data-comment-id="1">
+        <div class="comment-header">
+          <div class="comment-author-info">
+            <div class="author-profile"></div>
+            <span class="author-name">더미 작성자 1</span>
+            <time class="comment-date">2021-01-01 00:00:00</time>
+          </div>
+
+          <div class="comment-action-buttons">
+            <button class="outline-button edit-comment-button" type="button">수정</button>
+            <button class="outline-button delete-comment-button" type="button">삭제</button>
+          </div>
+        </div>
+
+        <p class="comment-content">댓글 내용</p>
+      </article>
+
+      <article class="comment-item" data-comment-id="2">
+        <div class="comment-header">
+          <div class="comment-author-info">
+            <div class="author-profile"></div>
+            <span class="author-name">더미 작성자 1</span>
+            <time class="comment-date">2021-01-01 00:00:00</time>
+          </div>
+
+          <div class="comment-action-buttons">
+            <button class="outline-button edit-comment-button" type="button">수정</button>
+            <button class="outline-button delete-comment-button" type="button">삭제</button>
+          </div>
+        </div>
+
+        <p class="comment-content">댓글 내용</p>
+      </article>
+
+      <article class="comment-item" data-comment-id="3">
+        <div class="comment-header">
+          <div class="comment-author-info">
+            <div class="author-profile"></div>
+            <span class="author-name">더미 작성자 1</span>
+            <time class="comment-date">2021-01-01 00:00:00</time>
+          </div>
+
+          <div class="comment-action-buttons">
+            <button class="outline-button edit-comment-button" type="button">수정</button>
+            <button class="outline-button delete-comment-button" type="button">삭제</button>
+          </div>
+        </div>
+
+        <p class="comment-content">댓글 내용</p>
+      </article>
+    </section>
+
+    <!-- 게시글 삭제 확인 모달 -->
+    <div class="modal-overlay post-delete-modal">
+      <div class="confirm-modal">
+        <h3 class="confirm-modal-title">게시글을 삭제하시겠습니까?</h3>
+        <p class="confirm-modal-description">삭제한 내용은 복구 할 수 없습니다.</p>
+
+        <div class="confirm-modal-buttons">
+          <button class="modal-cancel-button post-delete-cancel-button" type="button">
+            취소
+          </button>
+          <button class="modal-confirm-button post-delete-confirm-button" type="button">
+            확인
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 댓글 삭제 확인 모달 -->
+    <div class="modal-overlay comment-delete-modal">
+      <div class="confirm-modal">
+        <h3 class="confirm-modal-title">댓글을 삭제하시겠습니까?</h3>
+        <p class="confirm-modal-description">삭제한 내용은 복구 할 수 없습니다.</p>
+
+        <div class="confirm-modal-buttons">
+          <button class="modal-cancel-button comment-delete-cancel-button" type="button">
+            취소
+          </button>
+          <button class="modal-confirm-button comment-delete-confirm-button" type="button">
+            확인
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/post-detail.js"></script>
+</body>
+
+</html>

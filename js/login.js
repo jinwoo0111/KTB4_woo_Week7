@@ -154,30 +154,18 @@ loginButton.addEventListener("click", async function () {
             return;
         }
 
-        const responseBody = await response.json();
+        const token = response.headers.get("Authorization");
 
-        console.log("로그인 응답:", responseBody);
+        console.log("Authorization token:", token);
 
-        const userId =
-            responseBody.user_id ??
-            responseBody.userId ??
-            responseBody.id ??
-            responseBody.data?.user_id ??
-            responseBody.data?.userId ??
-            responseBody.data?.id;
-
-        console.log("저장할 userId:", userId);
-
-        if (userId === undefined || userId === null) {
-            console.log("userId를 찾지 못했습니다.");
-            showHelperText(loginFailHelperText, "로그인 응답에서 사용자 정보를 찾을 수 없습니다.");
+        if (!token) {
+            showHelperText(loginFailHelperText, "로그인 토큰을 찾을 수 없습니다.");
             return;
         }
 
-        localStorage.setItem("userId", String(userId));
+        localStorage.setItem("accessToken", token);
 
-        console.log("localStorage userId:", localStorage.getItem("userId"));
-
+        console.log("localStorage accessToken:", localStorage.getItem("accessToken"));
         window.location.href = "./posts.html";
     } catch (error) {
         console.error("로그인 요청 중 오류: ", error);

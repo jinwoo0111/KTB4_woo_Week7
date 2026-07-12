@@ -52,18 +52,18 @@ const params = new URLSearchParams(window.location.search);
 function parsePostId(searchParams) {
     const postIdParam = searchParams.get("postId");
 
-    if(postIdParam === null || postIdParam.trim() === "") {
+    if (postIdParam === null || postIdParam.trim() === "") {
         return null;
     }
     const normalizedPostId = postIdParam.trim();
 
-    if(!/^[1-9]\d*$/.test(normalizedPostId)) {
+    if (!/^[1-9]\d*$/.test(normalizedPostId)) {
         return null;
     }
 
     const parsedPostId = Number(normalizedPostId);
 
-    if(!Number.isSafeInteger(parsedPostId)) {
+    if (!Number.isSafeInteger(parsedPostId)) {
         return null;
     }
     return parsedPostId;
@@ -91,7 +91,7 @@ function closeModal(modalElement) {
 function validateComment() {
     const comment = commentInput.value.trim();
 
-    if(comment === "") {
+    if (comment === "") {
         showHelperText(commentHelperText, COMMENT_EMPTY_MESSAGE);
         return false;
     }
@@ -129,7 +129,7 @@ function normalizePostDetail(post) {
         content: post.content,
         contentImage: post.content_image,
         likeCount: post.like_count,
-        likedByMe : post.likedByMe === true,
+        likedByMe: post.liked_by_me === true,
         commentCount: post.comment_count,
         viewCount: post.view_count,
         comments: post.comments || []
@@ -142,7 +142,7 @@ function normalizeComment(comment) {
         authorNickname:
             comment.author_nickname ||
             comment.authorNickname ||
-            comment["author_nickname)"] ||
+            comment["author_nickname"] ||
             "작성자",
         createdAt: comment.created_at,
         content: comment.content
@@ -150,11 +150,11 @@ function normalizeComment(comment) {
 }
 
 function renderPostImage(contentImage) {
-    if(postImage === null) {
+    if (postImage === null) {
         return;
     }
 
-    if(contentImage === null || contentImage === "") {
+    if (contentImage === null || contentImage === "") {
         postImage.style.display = "none";
         return;
     }
@@ -191,13 +191,13 @@ function createCommentHTML(comment) {
 }
 
 function renderComments(comments) {
-    if(commentList === null) {
+    if (commentList === null) {
         return;
     }
 
     commentList.innerHTML = "";
 
-    if(comments.length === 0) {
+    if (comments.length === 0) {
         commentList.innerHTML = `
             <p class="empty-comment-message">
                 아직 댓글이 없습니다.
@@ -206,12 +206,107 @@ function renderComments(comments) {
         return;
     }
 
-    comments.forEach(function(comment) {
+    comments.forEach(function (comment) {
         const normalizedComment = normalizeComment(comment);
         const commentHTML = createCommentHTML(normalizedComment);
 
         commentList.insertAdjacentHTML("beforeend", commentHTML);
     });
+}
+
+function removeEmptyCommentMessage() {
+    const emptyMessage = commentList.querySelector(
+        ".empty-comment-message"
+    );
+
+    if (emptyMessage !== null) {
+        emptyMessage.remove();
+    }
+}
+
+function showEmptyCommentMessageIfNeeded() {
+    const remainingComments =
+        commentList.querySelectorAll(".comment-item");
+
+    if (remainingComments.length > 0) {
+        return;
+    }
+
+    commentList.innerHTML = `
+        <p class="empty-comment-message">
+            아직 댓글이 없습니다.
+        </p>
+    `;
+}
+
+function appendComment(comment) {
+    removeEmptyCommentMessage();
+
+    const commentHTML = createCommentHTML(comment);
+
+    commentList.insertAdjacentHTML(
+        "beforeend",
+        commentHTML
+    );
+}
+
+function updateCommentItem(comment) {
+    const commentItem = commentList.querySelector(
+        `.comment-item[data-comment-id="${comment.commentId}"]`
+    );
+
+    if (commentItem === null) {
+        return;
+    }
+
+    const authorName =
+        commentItem.querySelector(".author-name");
+
+    const commentDate =
+        commentItem.querySelector(".comment-date");
+
+    const commentContent =
+        commentItem.querySelector(".comment-content");
+
+    authorName.textContent = comment.authorNickname;
+    commentDate.textContent = comment.createdAt;
+    commentContent.textContent = comment.content;
+}
+
+function removeCommentItem(commentId) {
+    const commentItem = commentList.querySelector(
+        `.comment-item[data-comment-id="${commentId}"]`
+    );
+
+    if (commentItem !== null) {
+        commentItem.remove();
+    }
+
+    showEmptyCommentMessageIfNeeded();
+}
+
+function changeCommentCount(amount) {
+    const currentCount =
+        Number(commentCount.textContent) || 0;
+
+    const nextCount = Math.max(
+        0,
+        currentCount + amount
+    );
+
+    commentCount.textContent = String(nextCount);
+}
+
+function changeLikeCount(amount) {
+    const currentCount =
+        Number(likeCount.textContent) || 0;
+
+    const nextCount = Math.max(
+        0,
+        currentCount + amount
+    );
+
+    likeCount.textContent = String(nextCount);
 }
 
 function renderPostDetail(post) {
@@ -237,7 +332,7 @@ async function fetchPostDetail() {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("게시글 상세 조회 실패 상태코드:", response.status);
             alert("게시글을 불러오지 못했습니다.");
             window.location.href = "./posts.html";
@@ -250,44 +345,44 @@ async function fetchPostDetail() {
 
         renderPostDetail(responseBody.data);
 
-    } catch(error) {
+    } catch (error) {
         console.error("게시글 상세 조회 중 오류:", error);
         alert("서버와 연결할 수 없습니다.");
         window.location.href = "./posts.html";
     }
 }
 
-commentInput.addEventListener("input", function() {
+commentInput.addEventListener("input", function () {
     updateCommentButtonStyle();
 
-    if(commentInput.value.trim() !== "") {
+    if (commentInput.value.trim() !== "") {
         hideHelperText(commentHelperText);
     }
 });
 
-commentSubmitButton.addEventListener("click", async function() {
+commentSubmitButton.addEventListener("click", async function () {
     const isCommentValid = validateComment();
 
-    if(!isCommentValid) {
+    if (!isCommentValid) {
         return;
     }
 
     const userId = localStorage.getItem("userId");
 
-    if(userId === null) {
+    if (userId === null) {
         window.location.href = "./login.html";
         return;
     }
 
-    if(selectedEditCommentId === null) {
-        await createComment(userId);
+    if (selectedEditCommentId === null) {
+        await createComment();
     }
     else {
         await updateComment();
     }
 });
 
-async function createComment(userId) {
+async function createComment() {
     const comment = commentInput.value.trim();
 
     try {
@@ -297,78 +392,103 @@ async function createComment(userId) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                author_id: Number(userId),
                 content: comment
             })
         });
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("댓글 등록 실패 상태코드:", response.status);
             showHelperText(commentHelperText, "댓글 등록에 실패했습니다.");
             return;
         }
 
-        console.log("댓글 등록 성공");
+        const responseBody = await response.json();
 
+        console.log("댓글 등록 응답:", responseBody);
+
+        const createdComment = normalizeComment(
+            responseBody.data
+        );
+
+        appendComment(createdComment);
+        changeCommentCount(1);
         resetCommentForm();
-        fetchPostDetail();
 
-    } catch(error) {
+    } catch (error) {
         console.error("댓글 등록 중 오류:", error);
-        showHelperText(commentHelperText, "서버와 연결할 수 없습니다.");
+        showHelperText(
+            commentHelperText,
+            "서버와 연결할 수 없습니다."
+        );
     }
 }
 
 async function updateComment() {
     const comment = commentInput.value.trim();
+    const editingCommentId = selectedEditCommentId;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${selectedEditCommentId}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                content: comment
-            })
-        });
+        const response = await fetch(
+            `${API_BASE_URL}/posts/${postId}/comments/${editingCommentId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    content: comment
+                })
+            }
+        );
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("댓글 수정 실패 상태코드:", response.status);
-            showHelperText(commentHelperText, "댓글 수정에 실패했습니다.");
+            showHelperText(
+                commentHelperText,
+                "댓글 수정에 실패했습니다."
+            );
             return;
         }
 
-        console.log("댓글 수정 성공");
+        const responseBody = await response.json();
 
+        console.log("댓글 수정 응답:", responseBody);
+
+        const updatedComment = normalizeComment(
+            responseBody.data
+        );
+
+        updateCommentItem(updatedComment);
         resetCommentForm();
-        fetchPostDetail();
 
-    } catch(error) {
+    } catch (error) {
         console.error("댓글 수정 중 오류:", error);
-        showHelperText(commentHelperText, "서버와 연결할 수 없습니다.");
+        showHelperText(
+            commentHelperText,
+            "서버와 연결할 수 없습니다."
+        );
     }
 }
 
-postEditButton.addEventListener("click", function() {
+postEditButton.addEventListener("click", function () {
     window.location.href = `./post-edit.html?postId=${postId}`;
 });
 
-postDeleteButton.addEventListener("click", function() {
+postDeleteButton.addEventListener("click", function () {
     openModal(postDeleteModal);
 });
 
-postDeleteCancelButton.addEventListener("click", function() {
+postDeleteCancelButton.addEventListener("click", function () {
     closeModal(postDeleteModal);
 });
 
-postDeleteConfirmButton.addEventListener("click", async function() {
+postDeleteConfirmButton.addEventListener("click", async function () {
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
             method: "DELETE"
         });
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("게시글 삭제 실패 상태코드:", response.status);
             closeModal(postDeleteModal);
             return;
@@ -379,17 +499,17 @@ postDeleteConfirmButton.addEventListener("click", async function() {
         closeModal(postDeleteModal);
         window.location.href = "./posts.html";
 
-    } catch(error) {
+    } catch (error) {
         console.error("게시글 삭제 중 오류:", error);
         closeModal(postDeleteModal);
     }
 });
 
-commentList.addEventListener("click", function(event) {
+commentList.addEventListener("click", function (event) {
     const commentEditButton = event.target.closest(".edit-comment-button");
     const commentDeleteButton = event.target.closest(".delete-comment-button");
 
-    if(commentEditButton !== null) {
+    if (commentEditButton !== null) {
         const commentItem = commentEditButton.closest(".comment-item");
         const commentContent = commentItem.querySelector(".comment-content").textContent;
 
@@ -405,7 +525,7 @@ commentList.addEventListener("click", function(event) {
         return;
     }
 
-    if(commentDeleteButton !== null) {
+    if (commentDeleteButton !== null) {
         selectedDeleteCommentId = commentDeleteButton.dataset.commentId;
 
         console.log("삭제할 댓글 id:", selectedDeleteCommentId);
@@ -415,108 +535,115 @@ commentList.addEventListener("click", function(event) {
     }
 });
 
-commentDeleteCancelButton.addEventListener("click", function() {
+commentDeleteCancelButton.addEventListener("click", function () {
     selectedDeleteCommentId = null;
     closeModal(commentDeleteModal);
 });
 
-commentDeleteConfirmButton.addEventListener("click", async function() {
-    if(selectedDeleteCommentId === null) {
+commentDeleteConfirmButton.addEventListener("click", async function () {
+    if (selectedDeleteCommentId === null) {
         closeModal(commentDeleteModal);
         return;
     }
 
+    const deletedCommentId = selectedDeleteCommentId;
+
     try {
         const response = await fetch(
-            `${API_BASE_URL}/posts/${postId}/comments/${selectedDeleteCommentId}`,
+            `${API_BASE_URL}/posts/${postId}/comments/${deletedCommentId}`,
             {
                 method: "DELETE"
             }
         );
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("댓글 삭제 실패 상태코드:", response.status);
+            selectedDeleteCommentId = null;
             closeModal(commentDeleteModal);
             return;
         }
 
         console.log("댓글 삭제 성공");
 
-        if(selectedEditCommentId === selectedDeleteCommentId) {
+        if (selectedEditCommentId === deletedCommentId) {
             resetCommentForm();
         }
+
+        removeCommentItem(deletedCommentId);
+        changeCommentCount(-1);
 
         selectedDeleteCommentId = null;
         closeModal(commentDeleteModal);
 
-        fetchPostDetail();
-
-    } catch(error) {
+    } catch (error) {
         console.error("댓글 삭제 중 오류:", error);
         selectedDeleteCommentId = null;
         closeModal(commentDeleteModal);
     }
 });
 
-likeButton.addEventListener("click", async function() {
+likeButton.addEventListener("click", async function () {
     const userId = localStorage.getItem("userId");
 
-    if(userId === null) {
+    if (userId === null) {
         window.location.href = "./login.html";
         return;
     }
 
+    likeButton.disabled = true;
+
     try {
         let response;
 
-        if(isLiked) {
-            response = await fetch(`${API_BASE_URL}/posts/${postId}/likes`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    user_id: Number(userId)
-                })
-            });
+        if (isLiked) {
+            response = await fetch(
+                `${API_BASE_URL}/posts/${postId}/likes`,
+                {
+                    method: "DELETE"
+                }
+            );
         }
         else {
-            response = await fetch(`${API_BASE_URL}/posts/${postId}/likes`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    user_id: Number(userId)
-                })
-            });
+            response = await fetch(
+                `${API_BASE_URL}/posts/${postId}/likes`,
+                {
+                    method: "POST"
+                }
+            );
         }
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("좋아요 처리 실패 상태코드:", response.status);
             return;
         }
 
         isLiked = !isLiked;
 
-        console.log("좋아요 상태:", isLiked);
+        if (isLiked) {
+            changeLikeCount(1);
+        }
+        else {
+            changeLikeCount(-1);
+        }
 
-        fetchPostDetail();
+        updateLikeButtonStyle();
 
-    } catch(error) {
+    } catch (error) {
         console.error("좋아요 처리 중 오류:", error);
+    } finally {
+        likeButton.disabled = false;
     }
 });
 
-backButton.addEventListener("click", function() {
+backButton.addEventListener("click", function () {
     window.location.href = "./posts.html";
 });
 
-headerProfileButton.addEventListener("click", function() {
+headerProfileButton.addEventListener("click", function () {
     window.location.href = "./user-edit.html";
 });
 
-if(postId === null) {
+if (postId === null) {
     alert("잘못된 게시글 주소입니다.");
     window.location.replace("./posts.html");
 }

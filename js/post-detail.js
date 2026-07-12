@@ -1,8 +1,5 @@
 const API_BASE_URL = "http://localhost:8080";
 
-const params = new URLSearchParams(window.location.search);
-const postId = Number(params.get("postId")) || 1;
-
 // 상단 버튼
 const backButton = document.querySelector(".back-button");
 const headerProfileButton = document.querySelector(".header-profile-button");
@@ -50,6 +47,30 @@ let selectedEditCommentId = null;
 
 // 지금 DTO에는 내가 좋아요 눌렀는지 정보가 없어서 화면 안에서만 관리
 let isLiked = false;
+
+const params = new URLSearchParams(window.location.search);
+
+function parsePostId(searchParams) {
+    const postIdParam = searchParams.get("postId");
+
+    if(postIdParam === null || postIdParam.trim() === "") {
+        return null;
+    }
+    const normalizedPostId = postIdParam.trim();
+
+    if(!/^[1-9]\d*$/.test(normalizedPostId)) {
+        return null;
+    }
+
+    const parsedPostId = Number(normalizedPostId);
+
+    if(!Number.isSafeInteger(parsedPostId)) {
+        return null;
+    }
+    return parsedPostId;
+}
+
+const postId = parsePostId(params);
 
 function showHelperText(helperTextElement, message) {
     helperTextElement.textContent = message;
@@ -487,5 +508,11 @@ headerProfileButton.addEventListener("click", function() {
     window.location.href = "./user-edit.html";
 });
 
-updateCommentButtonStyle();
-fetchPostDetail();
+if(postId === null) {
+    alert("잘못된 게시글 주소입니다.");
+    window.location.replace("./posts.html");
+}
+else {
+    updateCommentButtonStyle();
+    fetchPostDetail();
+}

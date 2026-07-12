@@ -1,8 +1,30 @@
 const API_BASE_URL = "http://localhost:8080";
 
 const params = new URLSearchParams(window.location.search);
-const postId = Number(params.get("postId")) || 1;
 
+function parsePostId(searchParams) {
+    const postIdParam = searchParams.get("postId");
+
+    if(postIdParam === null || postIdParam.trim() === "") {
+        return null;
+    }
+
+    const normalizedPostId = postIdParam.trim();
+
+    if(!/^[1-9]\d*$/.test(normalizedPostId)) {
+        return null;
+    }
+
+    const parsedPostId = Number(normalizedPostId);
+
+    if(!Number.isSafeInteger(parsedPostId)) {
+        return null;
+    }
+
+    return parsedPostId;
+}
+
+const postId = parsePostId(params);
 
 const titleInput = document.querySelector("#post-title");
 const contentInput = document.querySelector("#post-content");
@@ -247,6 +269,10 @@ headerProfileButton.addEventListener("click", function() {
     window.location.href = "./user-edit.html";
 });
 
-
-// 페이지가 처음 열렸을 때 기존 게시글 데이터를 화면에 보여줌
-fetchPostDetail();
+if (postId === null) {
+    alert("잘못된 게시글 주소입니다.");
+    window.location.replace("./posts.html");
+}
+else {
+    fetchPostDetail();
+}

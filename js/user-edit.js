@@ -41,17 +41,17 @@ function hideHelperText(helperTextElement) {
 
 function validateNickname() {
     const nickname = nicknameInput.value;
-    if(nickname.trim() === "") {
+    if (nickname.trim() === "") {
         showHelperText(nicknameHelperText, NICKNAME_EMPTY_MESSAGE);
         return false;
     }
 
-    if(/\s/.test(nickname)) {
+    if (/\s/.test(nickname)) {
         showHelperText(nicknameHelperText, NICKNAME_HAS_SPACING_MESSAGE);
         return false;
     }
 
-    if(nickname.length > 10) {
+    if (nickname.length > 10) {
         showHelperText(nicknameHelperText, NICKNAME_INVALID_MESSAGE);
         return false;
     }
@@ -68,13 +68,13 @@ function updateUserUpdateButtonStyle() {
 
 // 기존 회원정보를 화면에 보여주기
 function renderUserInfo(user) {
-    if(emailText !== null) {
+    if (emailText !== null) {
         emailText.textContent = user.email;
     }
 
     nicknameInput.value = user.nickname;
 
-    if(user.profile_image !== null && user.profile_image !== "") {
+    if (user.profile_image !== null && user.profile_image !== "") {
         profileImageButton.style.backgroundImage = `url("../assets/${user.profile_image}")`;
         profileImageButton.style.backgroundSize = "cover";
         profileImageButton.style.backgroundPosition = "center";
@@ -87,7 +87,7 @@ function renderUserInfo(user) {
 async function fetchUserInfo() {
     const userId = localStorage.getItem("userId");
 
-    if(userId === null) {
+    if (userId === null) {
         window.location.href = "./login.html";
         return;
     }
@@ -95,7 +95,7 @@ async function fetchUserInfo() {
     try {
         const response = await fetch(`${API_BASE_URL}/users/${userId}`);
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("회원정보 조회 실패 상태코드:", response.status);
             window.location.href = "./login.html";
             return;
@@ -105,11 +105,21 @@ async function fetchUserInfo() {
 
         console.log("회원정보 조회 응답:", responseBody);
 
-        const user = responseBody.data;
+        const user = responseBody?.data;
+
+        if (user === null || user === undefined) {
+            console.error(
+                "회원정보 조회 응답 형식 오류:",
+                responseBody
+            );
+
+            alert("회원정보 응답 데이터가 올바르지 않습니다.");
+            return;
+        }
 
         renderUserInfo(user);
 
-    } catch(error) {
+    } catch (error) {
         console.error("회원정보 조회 중 오류:", error);
     }
 }
@@ -118,7 +128,7 @@ async function fetchUserInfo() {
 function showToastMessage() {
     toastMessage.classList.add("is-visible");
 
-    setTimeout(function() {
+    setTimeout(function () {
         toastMessage.classList.remove("is-visible");
     }, 2000);
 }
@@ -143,21 +153,21 @@ function closeProfileDropdown() {
     profileDropdown.classList.remove("is-open");
 }
 
-nicknameInput.addEventListener("input", function() {
+nicknameInput.addEventListener("input", function () {
     updateUserUpdateButtonStyle();
 });
 
-userUpdateButton.addEventListener("click", async function() {
+userUpdateButton.addEventListener("click", async function () {
     const isNicknameValid = validateNickname();
 
-    if(!isNicknameValid) {
+    if (!isNicknameValid) {
         userUpdateButton.classList.remove("active");
         return;
     }
 
     const userId = localStorage.getItem("userId");
 
-    if(userId === null) {
+    if (userId === null) {
         window.location.href = "./login.html";
         return;
     }
@@ -167,9 +177,9 @@ userUpdateButton.addEventListener("click", async function() {
     const requestBody = {
         nickname: nickname
     };
-    
 
-    if(selectedProfileImageFile !== null) {
+
+    if (selectedProfileImageFile !== null) {
         requestBody.profile_image = selectedProfileImageFile.name;
     }
 
@@ -182,10 +192,10 @@ userUpdateButton.addEventListener("click", async function() {
             body: JSON.stringify(requestBody)
         });
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("회원정보 수정 실패 상태코드:", response.status);
 
-            if(response.status === 409) {
+            if (response.status === 409) {
                 showHelperText(nicknameHelperText, NICKNAME_DUP_MESSAGE);
                 return;
             }
@@ -201,24 +211,24 @@ userUpdateButton.addEventListener("click", async function() {
 
         showToastMessage();
 
-    } catch(error) {
+    } catch (error) {
         console.error("회원정보 수정 중 오류:", error);
         showHelperText(nicknameHelperText, "서버와 연결할 수 없습니다.");
     }
 });
 
-userDeleteButton.addEventListener("click", function() {
+userDeleteButton.addEventListener("click", function () {
     openUserDeleteModal();
 });
 
-userDeleteCancelButton.addEventListener("click", function() {
+userDeleteCancelButton.addEventListener("click", function () {
     closeUserDeleteModal();
 });
 
-userDeleteConfirmButton.addEventListener("click", async function() {
+userDeleteConfirmButton.addEventListener("click", async function () {
     const userId = localStorage.getItem("userId");
 
-    if(userId === null) {
+    if (userId === null) {
         window.location.href = "./login.html";
         return;
     }
@@ -228,7 +238,7 @@ userDeleteConfirmButton.addEventListener("click", async function() {
             method: "DELETE"
         });
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("회원 탈퇴 실패 상태코드:", response.status);
             closeUserDeleteModal();
             return;
@@ -242,47 +252,47 @@ userDeleteConfirmButton.addEventListener("click", async function() {
 
         window.location.href = "./login.html";
 
-    } catch(error) {
+    } catch (error) {
         console.error("회원 탈퇴 중 오류:", error);
         closeUserDeleteModal();
     }
 });
 
-userDeleteModal.addEventListener("click", function(event) {
-    if(event.target === userDeleteModal) {
+userDeleteModal.addEventListener("click", function (event) {
+    if (event.target === userDeleteModal) {
         closeUserDeleteModal();
     }
 });
 
-headerProfileButton.addEventListener("click", function(event) {
+headerProfileButton.addEventListener("click", function (event) {
     event.stopPropagation();
     toggleProfileDropdown();
 });
 
 // 드롭다운 내부 클릭 시 이벤트 전파 막기
-profileDropdown.addEventListener("click", function(event) {
+profileDropdown.addEventListener("click", function (event) {
     event.stopPropagation();
 });
 
 
 // 화면 다른 곳 클릭 시 드롭다운 닫기
-document.addEventListener("click", function() {
+document.addEventListener("click", function () {
     closeProfileDropdown();
 });
 
 
 // 드롭다운 - 회원정보수정 클릭
-userEditButton.addEventListener("click", function() {
+userEditButton.addEventListener("click", function () {
     window.location.href = "./user-edit.html";
 });
 
 // 드롭다운 - 비밀번호 수정
-passwordEditButton.addEventListener("click", function() {
+passwordEditButton.addEventListener("click", function () {
     window.location.href = "./password-edit.html";
 });
 
 // 드롭다운 - 로그아웃 클릭
-logoutButton.addEventListener("click", function() {
+logoutButton.addEventListener("click", function () {
 
     console.log("로그아웃");
 
@@ -292,8 +302,8 @@ logoutButton.addEventListener("click", function() {
 });
 
 // 프로필 이미지 변경 버튼 클릭
-profileImageButton.addEventListener("click", function() {
-    if(profileImageInput === null) {
+profileImageButton.addEventListener("click", function () {
+    if (profileImageInput === null) {
         console.log("profile-image input이 없습니다.");
         return;
     }
@@ -301,11 +311,11 @@ profileImageButton.addEventListener("click", function() {
     profileImageInput.click();
 });
 
-if(profileImageInput !== null) {
-    profileImageInput.addEventListener("change", function() {
+if (profileImageInput !== null) {
+    profileImageInput.addEventListener("change", function () {
         const file = profileImageInput.files[0];
 
-        if(file === undefined) {
+        if (file === undefined) {
             selectedProfileImageFile = null;
             console.log("프로필 이미지 선택 취소");
             return;

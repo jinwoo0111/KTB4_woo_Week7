@@ -343,7 +343,19 @@ async function fetchPostDetail() {
 
         console.log("게시글 상세 조회 응답:", responseBody);
 
-        renderPostDetail(responseBody.data);
+        const postData = responseBody?.data;
+
+        if (postData === null || postData === undefined) {
+            console.error(
+                "게시글 상세 응답 형식 오류:",
+                responseBody
+            );
+
+            alert("게시글 응답 데이터가 올바르지 않습니다.");
+            return;
+        }
+
+        renderPostDetail(postData);
 
     } catch (error) {
         console.error("게시글 상세 조회 중 오류:", error);
@@ -377,7 +389,7 @@ commentSubmitButton.addEventListener("click", async function () {
     commentSubmitButton.disabled = true;
 
     try {
-        if(selectedEditCommentId === null) {
+        if (selectedEditCommentId === null) {
             await createComment();
         }
         else {
@@ -412,14 +424,28 @@ async function createComment() {
 
         console.log("댓글 등록 응답:", responseBody);
 
+        const commentData = responseBody?.data;
+
+        if (commentData === null || commentData === undefined) {
+            console.error(
+                "댓글 등록 응답 형식 오류:",
+                responseBody
+            );
+
+            showHelperText(
+                commentHelperText,
+                "댓글 응답 데이터가 올바르지 않습니다."
+            );
+            return;
+        }
+
         const createdComment = normalizeComment(
-            responseBody.data
+            commentData
         );
 
         appendComment(createdComment);
         changeCommentCount(1);
         resetCommentForm();
-
     } catch (error) {
         console.error("댓글 등록 중 오류:", error);
         showHelperText(
@@ -460,8 +486,23 @@ async function updateComment() {
 
         console.log("댓글 수정 응답:", responseBody);
 
+        const commentData = responseBody?.data;
+
+        if (commentData === null || commentData === undefined) {
+            console.error(
+                "댓글 수정 응답 형식 오류:",
+                responseBody
+            );
+
+            showHelperText(
+                commentHelperText,
+                "댓글 응답 데이터가 올바르지 않습니다."
+            );
+            return;
+        }
+
         const updatedComment = normalizeComment(
-            responseBody.data
+            commentData
         );
 
         updateCommentItem(updatedComment);
@@ -564,7 +605,7 @@ commentDeleteConfirmButton.addEventListener("click", async function () {
             }
         );
 
-        if(!response.ok) {
+        if (!response.ok) {
             console.log("댓글 삭제 실패 상태코드:", response.status);
             selectedDeleteCommentId = null;
             closeModal(commentDeleteModal);
@@ -573,7 +614,7 @@ commentDeleteConfirmButton.addEventListener("click", async function () {
 
         console.log("댓글 삭제 성공");
 
-        if(selectedEditCommentId === deletedCommentId) {
+        if (selectedEditCommentId === deletedCommentId) {
             resetCommentForm();
         }
 
@@ -583,7 +624,7 @@ commentDeleteConfirmButton.addEventListener("click", async function () {
         selectedDeleteCommentId = null;
         closeModal(commentDeleteModal);
 
-    } catch(error) {
+    } catch (error) {
         console.error("댓글 삭제 중 오류:", error);
         selectedDeleteCommentId = null;
         closeModal(commentDeleteModal);

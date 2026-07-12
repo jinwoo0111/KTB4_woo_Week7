@@ -45,7 +45,6 @@ const COMMENT_EMPTY_MESSAGE = "댓글을 입력해주세요.";
 let selectedDeleteCommentId = null;
 let selectedEditCommentId = null;
 
-// 지금 DTO에는 내가 좋아요 눌렀는지 정보가 없어서 화면 안에서만 관리
 let isLiked = false;
 
 const params = new URLSearchParams(window.location.search);
@@ -108,6 +107,11 @@ function updateCommentButtonStyle() {
     commentSubmitButton.classList.toggle("active", isCommentValid);
 }
 
+function updateLikeButtonStyle() {
+    likeButton.classList.toggle("is-liked", isLiked);
+    likeButton.setAttribute("aria-pressed", String(isLiked));
+}
+
 function resetCommentForm() {
     commentInput.value = "";
     selectedEditCommentId = null;
@@ -125,6 +129,7 @@ function normalizePostDetail(post) {
         content: post.content,
         contentImage: post.content_image,
         likeCount: post.like_count,
+        likedByMe : post.likedByMe === true,
         commentCount: post.comment_count,
         viewCount: post.view_count,
         comments: post.comments || []
@@ -220,6 +225,9 @@ function renderPostDetail(post) {
     likeCount.textContent = normalizedPost.likeCount;
     viewCount.textContent = normalizedPost.viewCount;
     commentCount.textContent = normalizedPost.commentCount;
+
+    isLiked = normalizedPost.likedByMe;
+    updateLikeButtonStyle();
 
     renderPostImage(normalizedPost.contentImage);
     renderComments(normalizedPost.comments);

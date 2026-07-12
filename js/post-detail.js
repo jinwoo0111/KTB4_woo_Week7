@@ -374,11 +374,17 @@ commentSubmitButton.addEventListener("click", async function () {
         return;
     }
 
-    if (selectedEditCommentId === null) {
-        await createComment();
-    }
-    else {
-        await updateComment();
+    commentSubmitButton.disabled = true;
+
+    try {
+        if(selectedEditCommentId === null) {
+            await createComment();
+        }
+        else {
+            await updateComment();
+        }
+    } finally {
+        commentSubmitButton.disabled = false;
     }
 });
 
@@ -548,6 +554,8 @@ commentDeleteConfirmButton.addEventListener("click", async function () {
 
     const deletedCommentId = selectedDeleteCommentId;
 
+    commentDeleteConfirmButton.disabled = true;
+
     try {
         const response = await fetch(
             `${API_BASE_URL}/posts/${postId}/comments/${deletedCommentId}`,
@@ -556,7 +564,7 @@ commentDeleteConfirmButton.addEventListener("click", async function () {
             }
         );
 
-        if (!response.ok) {
+        if(!response.ok) {
             console.log("댓글 삭제 실패 상태코드:", response.status);
             selectedDeleteCommentId = null;
             closeModal(commentDeleteModal);
@@ -565,7 +573,7 @@ commentDeleteConfirmButton.addEventListener("click", async function () {
 
         console.log("댓글 삭제 성공");
 
-        if (selectedEditCommentId === deletedCommentId) {
+        if(selectedEditCommentId === deletedCommentId) {
             resetCommentForm();
         }
 
@@ -575,10 +583,12 @@ commentDeleteConfirmButton.addEventListener("click", async function () {
         selectedDeleteCommentId = null;
         closeModal(commentDeleteModal);
 
-    } catch (error) {
+    } catch(error) {
         console.error("댓글 삭제 중 오류:", error);
         selectedDeleteCommentId = null;
         closeModal(commentDeleteModal);
+    } finally {
+        commentDeleteConfirmButton.disabled = false;
     }
 });
 

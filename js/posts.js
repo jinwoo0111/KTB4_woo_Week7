@@ -1,13 +1,23 @@
-const API_BASE_URL = "http://localhost:8080";
+import {
+    apiRequest
+} from "./common/api.js";
 
-const writePostButton = document.querySelector(".write-post-button");
-
-const postList = document.querySelector("#post-list");
-
-const headerProfileButton = document.querySelector(".header-profile-button");
+import {
+    requireLogin
+} from "./common/auth.js";
 
 
-// 객체 받아서 게시글 카드(요약?) HTML 문자열 만드는 함수
+const writePostButton =
+    document.querySelector(".write-post-button");
+
+const postList =
+    document.querySelector("#post-list");
+
+const headerProfileButton =
+    document.querySelector(".header-profile-button");
+
+
+// 게시글 카드 HTML 생성
 function createPostCardHTML(post) {
     return `
         <article class="post-card" data-post-id="${post.postId}">
@@ -33,30 +43,33 @@ function createPostCardHTML(post) {
     `;
 }
 
-// 게시글 목록 렌더링
 
+// 게시글 목록 렌더링
 function renderPosts(posts) {
     postList.innerHTML = "";
 
     if(posts.length === 0) {
         postList.innerHTML = `
-            <p class = "empty-post-message">
+            <p class="empty-post-message">
                 아직 작성된 게시글이 없습니다.
             </p>
         `;
-        return ;
+        return;
     }
 
-    posts.forEach(function (post) {
-        const postCardHTML = createPostCardHTML(post);
+    posts.forEach(function(post) {
+        const postCardHTML =
+            createPostCardHTML(post);
 
-        postList.insertAdjacentHTML("beforeend", postCardHTML);
+        postList.insertAdjacentHTML(
+            "beforeend",
+            postCardHTML
+        );
     });
-
 }
 
-// 백엔드 응답 데이터 형식 변경
-// 백엔드 snack_case -> camelCase로 (post_id -> postId)
+
+// 백엔드 snake_case 응답을 camelCase로 변경
 function normalizePost(post) {
     return {
         postId: post.post_id,
@@ -70,13 +83,16 @@ function normalizePost(post) {
 }
 
 
-// 게시글 목록 Fetch 요청 함수
+// 게시글 목록 조회
 async function fetchPosts() {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts`);
+        const result = await apiRequest("/posts");
 
-        if(!response.ok) {
-            console.log("게시글 목록 조회 실패 : ", response.status);
+        if(!result.ok) {
+            console.log(
+                "게시글 목록 조회 실패 상태코드:",
+                result.status
+            );
 
             postList.innerHTML = `
                 <p class="empty-post-message">
@@ -86,20 +102,39 @@ async function fetchPosts() {
             return;
         }
 
-        const responseBody = await response.json();
+        console.log(
+            "게시글 목록 응답:",
+            result.body
+        );
 
-        //확인용코드
-        console.log("게시글 목록 응답: ", responseBody);
+        const postData =
+            result.body?.data?.posts;
 
-        const postData = responseBody.data.posts || [];
+        if(!Array.isArray(postData)) {
+            console.error(
+                "게시글 목록 응답 형식 오류:",
+                result.body
+            );
+
+            postList.innerHTML = `
+                <p class="empty-post-message">
+                    게시글 응답 데이터가 올바르지 않습니다.
+                </p>
+            `;
+            return;
+        }
 
         const posts = postData.map(function(post) {
             return normalizePost(post);
         });
 
         renderPosts(posts);
-    } catch (error) {
-        console.error("게시글 목록 조회 중 오류 : ", error);
+
+    } catch(error) {
+        console.error(
+            "게시글 목록 조회 중 오류:",
+            error
+        );
 
         postList.innerHTML = `
             <p class="empty-post-message">
@@ -109,32 +144,42 @@ async function fetchPosts() {
     }
 }
 
-writePostButton.addEventListener("click", function() {
-    const userId = localStorage.getItem("userId");
 
-    if(userId === null) {
-        window.location.href = "./login.html";
+// 게시글 작성 페이지 이동
+writePostButton.addEventListener("click", function() {
+    if(!requireLogin()) {
         return;
     }
 
     window.location.href = "./post-create.html";
 });
 
-postList.addEventListener("click", function(event) {
-    // 클릭에서 가장 가까운 Post-card
-    const postCard = event.target.closest(".post-card");
 
-    if (postCard === null) {
-        return ;
+// 게시글 카드 클릭
+postList.addEventListener("click", function(event) {
+    const postCard =
+        event.target.closest(".post-card");
+
+    if(postCard === null) {
+        return;
     }
 
-    const postId = postCard.dataset.postId;
+    const postId =
+        postCard.dataset.postId;
 
-    window.location.href = `./post-detail.html?postId=${postId}`;
+    window.location.href =
+        `./post-detail.html?postId=${postId}`;
 });
 
-headerProfileButton.addEventListener("click", function () {
-    window.location.href = "./user-edit.html";
-});
 
+// 회원정보 페이지 이동
+headerProfileButton.addEventListener(
+    "click",
+    function() {
+        window.location.href = "./user-edit.html";
+    }
+);
+
+
+// 최초 게시글 목록 조회
 fetchPosts();

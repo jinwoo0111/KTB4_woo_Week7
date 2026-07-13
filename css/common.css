@@ -1,3 +1,26 @@
+:root {
+  --color-background: #fff8fb;
+  --color-surface: #ffffff;
+  --color-primary: #c83f73;
+  --color-primary-hover: #a92f5f;
+  --color-primary-soft: #fbeaf1;
+  --color-accent: #f3a9c2;
+  --color-text: #2d2328;
+  --color-text-muted: #80757b;
+  --color-border: #f0dde5;
+  --color-danger: #b4233e;
+  --color-danger-hover: #921d33;
+  --color-overlay: rgba(45, 35, 40, 0.48);
+  --shadow-small: 0 4px 14px rgba(113, 48, 75, 0.06);
+  --shadow-medium: 0 10px 30px rgba(113, 48, 75, 0.09);
+  --shadow-large: 0 18px 50px rgba(113, 48, 75, 0.12);
+  --radius-small: 8px;
+  --radius-medium: 12px;
+  --radius-large: 18px;
+  --radius-round: 999px;
+  --content-width: 1200px;
+}
+
 /* 모든 요소의 크기 계산 방식을 통일 */
 * {
   box-sizing: border-box;
@@ -6,9 +29,14 @@
 /* 전체 페이지 기본 스타일 */
 body {
   margin: 0;
-  background-color: #f4f5f7;
-  font-family: Arial, sans-serif;
-  color: #000;
+  background-color: var(--color-background);
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: var(--color-text);
 }
 
 /* 모든 버튼의 기본 설정 */
@@ -20,28 +48,107 @@ button {
 /* 상단 헤더 */
 .page-header {
   width: 100%;
-  height: 76px;
-  border-bottom: 1px solid #000;
+  min-height: 76px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: rgba(255, 255, 255, 0.92);
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  padding: 0 16px;
 }
 
-/* 상단 제목 */
-.page-header-title {
+.global-header-inner {
+  width: min(100%, var(--content-width));
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 40px;
+  align-items: center;
+  gap: 24px;
+}
+
+.global-brand-area {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-header-title,
+.global-logo {
   margin: 0;
-  font-size: 24px;
-  font-weight: 400;
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.global-navigation {
+  display: flex;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 28px);
+  white-space: nowrap;
+}
+
+.global-nav-link {
+  position: relative;
+  padding: 8px 0;
+  color: var(--color-text-muted);
+  font-size: clamp(11px, 1.5vw, 14px);
+  font-weight: 800;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+.global-nav-link:hover,
+.global-nav-link.is-active {
+  color: var(--color-primary);
+}
+
+.global-nav-link.is-active::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border-radius: var(--radius-round);
+  background-color: var(--color-primary);
+}
+
+.global-header .header-profile-button {
+  position: static;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #ffffff 0 18%, transparent 19%),
+    linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  box-shadow: var(--shadow-small);
+  overflow: hidden;
+}
+
+.global-header .header-profile-area {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 40px;
+  height: 40px;
 }
 
 /* 뒤로가기 버튼이 필요한 페이지에서 사용 */
 .back-button {
-  position: absolute;
-  left: calc(50% - 190px);
+  width: 32px;
+  height: 32px;
   border: none;
-  background-color: transparent;
-  font-size: 24px;
+  border-radius: 50%;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -82,12 +189,18 @@ button {
 /* input 기본 모양 */
 .form-input {
   width: 100%;
-  height: 36px;
+  min-height: 44px;
   padding: 0 12px;
-  border: 1px solid #000;
-  border-radius: 4px;
-  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background-color: var(--color-surface);
   font-size: 14px;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+  outline: none;
 }
 
 /* helper text는 처음에는 숨김 */
@@ -102,10 +215,10 @@ button {
 /* 주요 버튼 */
 .primary-button {
   width: 100%;
-  height: 36px;
+  min-height: 44px;
   border: none;
-  border-radius: 4px;
-  background-color: #aca0eb;
+  border-radius: var(--radius-small);
+  background-color: var(--color-accent);
   color: white;
   font-size: 14px;
   font-weight: 700;
@@ -113,15 +226,55 @@ button {
 
 /* 나중에 JS로 활성화할 때 사용할 class */
 .primary-button.active {
-  background-color: #7f6aee;
+  background-color: var(--color-primary);
+}
+
+.primary-button.active:hover {
+  background-color: var(--color-primary-hover);
 }
 
 /* 텍스트 버튼 */
 .text-button {
   width: 100%;
-  height: 36px;
+  min-height: 44px;
   border: none;
   background-color: transparent;
-  color: #000;
+  color: var(--color-text);
   font-size: 14px;
+}
+
+@media (max-width: 520px) {
+  .page-header {
+    min-height: 64px;
+    padding: 0 10px;
+  }
+
+  .global-header-inner {
+    min-height: 64px;
+    grid-template-columns: minmax(76px, 1fr) auto 32px;
+    gap: 8px;
+  }
+
+  .global-brand-area {
+    gap: 6px;
+  }
+
+  .page-header-title,
+  .global-logo {
+    max-width: 96px;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .back-button {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .global-header .header-profile-button {
+    width: 32px;
+    height: 32px;
+  }
 }

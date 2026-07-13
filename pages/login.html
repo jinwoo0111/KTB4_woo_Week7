@@ -8,9 +8,23 @@
   <link rel="stylesheet" href="../css/login.css">
 </head>
 
-<body>
-  <header class="page-header">
-    <h1 class="page-header-title">아무 말 대잔치</h1>
+<body data-page="login">
+  <header class="page-header global-header">
+    <div class="global-header-inner">
+      <div class="global-brand-area">
+        <a class="page-header-title global-logo" href="./home.html">
+          RESCENE FAN COMMUNITY
+        </a>
+      </div>
+
+      <nav class="global-navigation" aria-label="주요 메뉴">
+        <a class="global-nav-link" href="./home.html" data-nav-page="home">HOME</a>
+        <a class="global-nav-link" href="./artist.html" data-nav-page="artist">ARTIST</a>
+        <a class="global-nav-link" href="./posts.html" data-nav-page="community">COMMUNITY</a>
+      </nav>
+
+      <button class="header-profile-button" type="button" aria-label="로그인 페이지로 이동"></button>
+    </div>
   </header>
 
   <main class="page-main login-main">
@@ -57,6 +71,7 @@
     </form>
   </main>
 
+  <script type="module" src="../js/common/navigation.js"></script>
   <script type="module" src="../js/login.js"></script>
 </body>
 </html>

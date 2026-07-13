@@ -24,55 +24,85 @@
                 <a class="global-nav-link" href="./posts.html" data-nav-page="community">COMMUNITY</a>
             </nav>
 
-            <div class="header-profile-area">
-                <button class="header-profile-button" type="button" aria-label="프로필 메뉴 열기"></button>
-
-                <div class="profile-dropdown">
-                    <button class="dropdown-item user-edit-menu" type="button">
-                        회원정보수정
-                    </button>
-                    <button class="dropdown-item password-edit-menu" type="button">
-                        비밀번호수정
-                    </button>
-                    <button class="dropdown-item logout-menu" type="button">
-                        로그아웃
-                    </button>
-                </div>
-            </div>
+            <button class="header-profile-button" type="button" aria-label="마이페이지"></button>
         </div>
     </header>
 
     <main class="user-edit-main">
-        <h2 class="user-edit-title">회원정보수정</h2>
-
-        <section class="profile-edit-section">
-            <p class="profile-section-label">프로필 사진*</p>
-
-            <button class="profile-image-button" type="button">
-                <span class="profile-change-text">변경</span>
-            </button>
+        <section class="mypage-intro">
+            <h1 class="user-edit-title">MY PAGE</h1>
         </section>
 
-        <form class="user-edit-form">
-            <div class="email-section">
-                <p class="form-label">이메일</p>
-                <p class="user-email">startupcode@gmail.com</p>
-            </div>
+        <div class="mypage-layout">
+            <aside class="mypage-sidebar" aria-label="마이페이지 메뉴">
+                <p class="mypage-sidebar-label">ACCOUNT</p>
 
-            <div class="form-group">
-                <label class="form-label" for="nickname">닉네임</label>
-                <input id="nickname" class="form-input nickname-input" type="text" value="스타트업코드">
-                <p class="helper-text nickname-helper-text">닉네임을 입력해주세요.</p>
-            </div>
+                <button class="mypage-menu-button is-active" type="button">
+                    <span class="mypage-menu-number">01</span>
+                    <span>회원정보 변경</span>
+                </button>
 
-            <button class="primary-button user-update-button" type="button">
-                수정하기
-            </button>
+                <button class="mypage-menu-button password-edit-menu" type="button">
+                    <span class="mypage-menu-number">02</span>
+                    <span>비밀번호 변경</span>
+                </button>
 
-            <button class="text-button user-delete-button" type="button">
-                회원 탈퇴
-            </button>
-        </form>
+                <button class="mypage-logout-button logout-menu" type="button">
+                    <span class="mypage-menu-number">03</span>
+                    로그아웃
+                </button>
+            </aside>
+
+            <section class="profile-card" aria-labelledby="profile-card-title">
+                <div class="profile-card-topline">
+                    <span>PROFILE  /  01</span>
+                    <span class="profile-card-status">REMINE</span>
+                </div>
+
+                <div class="profile-summary">
+                    <div class="profile-image-wrap">
+                        <button class="profile-image-button" type="button" aria-label="프로필 사진 변경">
+                            <span class="profile-change-text">EDIT</span>
+                        </button>
+                        <input id="profile-image" class="profile-image-input" type="file" accept="image/*">
+                    </div>
+
+                    <div class="profile-identity">
+                        <p class="profile-identity-label">INFO</p>
+                        <h2 id="profile-card-title" class="profile-display-name">회원님</h2>
+                        <p class="user-email"></p>
+                    </div>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <form class="user-edit-form">
+                    <div class="profile-info-heading">
+                        <p class="profile-section-label">PERSONAL INFO</p>
+                        <span>01 / 02</span>
+                    </div>
+
+                    <div class="email-section">
+                        <p class="form-label">이메일</p>
+                        <p class="profile-readonly-value user-email-copy"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="nickname">닉네임</label>
+                        <input id="nickname" class="form-input nickname-input" type="text" autocomplete="nickname">
+                        <p class="helper-text nickname-helper-text">닉네임을 입력해주세요.</p>
+                    </div>
+
+                    <button class="primary-button user-update-button" type="button">
+                        회원정보 저장
+                    </button>
+
+                    <button class="text-button user-delete-button" type="button">
+                        회원 탈퇴
+                    </button>
+                </form>
+            </section>
+        </div>
 
         <div class="toast-message">
             수정완료

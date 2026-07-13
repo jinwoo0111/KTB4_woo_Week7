@@ -149,7 +149,7 @@ function createListPostHTML(post) {
 
 function createCardPostHTML(post) {
     return `
-        <article class="post-item post-card-view" data-post-id="${post.postId}">
+        <article class="post-item post-card-view ${hasImage(post.contentImage) ? "has-card-image" : "no-card-image"}" data-post-id="${post.postId}">
             <div class="post-card-author-row">
                 <div class="post-author-avatar" aria-hidden="true"></div>
                 <strong class="post-card-author">${escapeHTML(post.authorNickname)}</strong>

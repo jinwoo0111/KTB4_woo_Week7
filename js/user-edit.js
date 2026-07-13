@@ -21,15 +21,11 @@ import {
 const nicknameInput = document.querySelector("#nickname");
 const profileImageInput = document.querySelector("#profile-image");
 const emailText = document.querySelector(".user-email");
+const emailCopyText =
+    document.querySelector(".user-email-copy");
 
-const headerProfileButton =
-    document.querySelector(".header-profile-button");
-
-const profileDropdown =
-    document.querySelector(".profile-dropdown");
-
-const userEditButton =
-    document.querySelector(".user-edit-menu");
+const profileDisplayName =
+    document.querySelector(".profile-display-name");
 
 const passwordEditButton =
     document.querySelector(".password-edit-menu");
@@ -126,8 +122,13 @@ function updateUserUpdateButtonStyle() {
 
 
 function renderUserInfo(user) {
-    emailText.textContent = user.email ?? "";
-    nicknameInput.value = user.nickname ?? "";
+    const email = user.email ?? "";
+    const nickname = user.nickname ?? "";
+
+    emailText.textContent = email;
+    emailCopyText.textContent = email;
+    profileDisplayName.textContent = nickname || "회원님";
+    nicknameInput.value = nickname;
 
     const profileImage =
         user.profile_image ??
@@ -198,16 +199,6 @@ function openUserDeleteModal() {
 
 function closeUserDeleteModal() {
     userDeleteModal.classList.remove("is-open");
-}
-
-
-function toggleProfileDropdown() {
-    profileDropdown.classList.toggle("is-open");
-}
-
-
-function closeProfileDropdown() {
-    profileDropdown.classList.remove("is-open");
 }
 
 
@@ -347,37 +338,6 @@ userDeleteModal.addEventListener(
         if(event.target === userDeleteModal) {
             closeUserDeleteModal();
         }
-    }
-);
-
-
-headerProfileButton.addEventListener(
-    "click",
-    function(event) {
-        event.stopPropagation();
-        toggleProfileDropdown();
-    }
-);
-
-
-profileDropdown.addEventListener(
-    "click",
-    function(event) {
-        event.stopPropagation();
-    }
-);
-
-
-document.addEventListener(
-    "click",
-    closeProfileDropdown
-);
-
-
-userEditButton.addEventListener(
-    "click",
-    function() {
-        window.location.href = "./user-edit.html";
     }
 );
 

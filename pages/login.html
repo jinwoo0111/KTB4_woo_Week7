@@ -28,50 +28,55 @@
   </header>
 
   <main class="page-main login-main">
-    <h2 class="page-title">로그인</h2>
+    <section class="login-card" aria-labelledby="login-title">
+      <p class="login-kicker">RESCENE FAN COMMUNITY</p>
+      <h2 class="page-title" id="login-title">로그인</h2>
 
-    <form class="form login-form">
-      <div class="form-group">
-        <label class="form-label" for="email">이메일</label>
-        <input
-          class="form-input"
-          id="email"
-          type="email"
-          placeholder="이메일을 입력하세요"
-        >
-        <p class="helper-text email-helper-text">
-          이메일을 입력해주세요.
+      <form class="form login-form">
+        <div class="form-group">
+          <label class="form-label" for="email">이메일</label>
+          <input
+            class="form-input"
+            id="email"
+            type="email"
+            autocomplete="email"
+            placeholder="이메일을 입력하세요"
+          >
+          <p class="helper-text email-helper-text">
+            이메일을 입력해주세요.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">비밀번호</label>
+          <input
+            class="form-input"
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="비밀번호를 입력하세요"
+          >
+          <p class="helper-text password-helper-text">
+            비밀번호를 입력해주세요.
+          </p>
+        </div>
+
+        <p class="helper-text login-fail-helper-text">
+          아이디 또는 비밀번호를 확인해주세요.
         </p>
-      </div>
 
-      <div class="form-group">
-        <label class="form-label" for="password">비밀번호</label>
-        <input
-          class="form-input"
-          id="password"
-          type="password"
-          placeholder="비밀번호를 입력하세요"
-        >
-        <p class="helper-text password-helper-text">
-          비밀번호를 입력해주세요.
-        </p>
-      </div>
+        <button class="primary-button login-button" type="button">
+          로그인
+        </button>
 
-      <p class="helper-text login-fail-helper-text">
-        아이디 또는 비밀번호를 확인해주세요.
-      </p>
-
-      <button class="primary-button login-button" type="button">
-        로그인
-      </button>
-
-      <button class="text-button signup-button" type="button">
-        회원가입
-      </button>
-    </form>
+        <button class="text-button signup-button" type="button">
+          회원가입
+        </button>
+      </form>
+    </section>
   </main>
 
   <script type="module" src="../js/common/navigation.js"></script>
-  <script type="module" src="../js/login.js"></script>
+  <script type="module" src="../js/login.js?v=20260713-login-skip-auth"></script>
 </body>
 </html>

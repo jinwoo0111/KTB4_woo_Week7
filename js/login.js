@@ -112,7 +112,6 @@ function validateLoginForm() {
     const isFormValid =
         isEmailValid && isPasswordValid;
 
-    loginButton.disabled = !isFormValid;
     loginButton.classList.toggle(
         "active",
         isFormValid
@@ -153,6 +152,7 @@ loginButton.addEventListener("click", async function() {
         const result = await apiRequest(
             "/users/login",
             {
+                skipAuth: true,
                 method: "POST",
                 body: JSON.stringify({
                     email: email,
@@ -194,7 +194,7 @@ loginButton.addEventListener("click", async function() {
 
         console.log("로그인 성공");
 
-        window.location.href = "./posts.html";
+        window.location.href = "./home.html";
 
     } catch(error) {
         console.error(
@@ -207,6 +207,7 @@ loginButton.addEventListener("click", async function() {
             "서버와 연결할 수 없습니다."
         );
     } finally {
+        loginButton.disabled = false;
         validateLoginForm();
     }
 });
@@ -219,4 +220,4 @@ signupButton.addEventListener("click", function() {
 
 
 // 9. 초기 버튼 상태
-loginButton.disabled = true;
+loginButton.disabled = false;

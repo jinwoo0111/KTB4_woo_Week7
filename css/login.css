@@ -1,21 +1,61 @@
-/* 로그인 페이지 본문 위치 */
 .login-main {
-  padding-top: 160px;
+  width: min(100% - 32px, 440px);
+  padding: 92px 0 72px;
 }
 
-/* 로그인 form */
+.login-card {
+  padding: 34px 32px 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background-color: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-medium);
+}
+
+.login-kicker {
+  margin: 0 0 8px;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.login-main .page-title {
+  margin-bottom: 26px;
+  font-size: 25px;
+  font-weight: 800;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-/* 로그인 버튼은 helper text와 input 아래쪽에 조금 여유를 둠 */
+.login-fail-helper-text {
+  text-align: center;
+}
+
 .login-button {
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-/* 회원가입 버튼 */
 .signup-button {
-  margin-top: 4px;
+  margin-top: 2px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+@media (max-width: 520px) {
+  .login-main {
+    width: min(100% - 24px, 440px);
+    padding-top: 56px;
+  }
+
+  .login-card {
+    padding: 28px 20px 24px;
+  }
+
+  .login-main .page-title {
+    font-size: 24px;
+  }
 }

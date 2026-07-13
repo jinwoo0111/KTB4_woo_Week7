@@ -9,13 +9,19 @@ export async function apiRequest(
     path,
     options = {}
 ) {
+    const {
+        skipAuth = false,
+        ...fetchOptions
+    } = options;
+
     const headers = new Headers(
-        options.headers || {}
+        fetchOptions.headers || {}
     );
 
     const accessToken = getAccessToken();
 
     if(
+        !skipAuth &&
         accessToken !== null &&
         !headers.has("Authorization")
     ) {
@@ -26,11 +32,11 @@ export async function apiRequest(
     }
 
     const hasBody =
-        options.body !== undefined &&
-        options.body !== null;
+        fetchOptions.body !== undefined &&
+        fetchOptions.body !== null;
 
     const isFormData =
-        options.body instanceof FormData;
+        fetchOptions.body instanceof FormData;
 
     if(
         hasBody &&
@@ -46,7 +52,7 @@ export async function apiRequest(
     const response = await fetch(
         `${API_BASE_URL}${path}`,
         {
-            ...options,
+            ...fetchOptions,
             headers
         }
     );

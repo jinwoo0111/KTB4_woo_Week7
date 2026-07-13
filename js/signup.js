@@ -60,9 +60,6 @@ const signupButton =
 const loginButton =
     document.querySelector(".login-link-button");
 
-const backButton =
-    document.querySelector(".back-button");
-
 const toastMessage =
     document.querySelector(".toast-message");
 
@@ -386,6 +383,7 @@ signupButton.addEventListener("click", async function() {
         const result = await apiRequest(
             "/users/signup",
             {
+                skipAuth: true,
                 method: "POST",
                 body: JSON.stringify({
                     email: email,
@@ -469,11 +467,5 @@ loginButton.addEventListener("click", function() {
 });
 
 
-// 14. 뒤로가기
-backButton.addEventListener("click", function() {
-    window.location.href = "./login.html";
-});
-
-
-// 15. 초기 버튼 상태
+// 14. 초기 버튼 상태
 signupButton.disabled = false;

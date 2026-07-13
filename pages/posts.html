@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>게시글 목록</title>
+  <title>Community</title>
 
   <link rel="stylesheet" href="../css/common.css">
   <link rel="stylesheet" href="../css/posts.css">
@@ -27,110 +27,59 @@
   </header>
 
   <main class="posts-main">
-    <section class="posts-intro">
-      <p>
-        안녕하세요,<br>
-        RESCENE FAN COMMUNITY <strong>게시판</strong> 입니다.
-      </p>
+    <section class="community-heading" aria-labelledby="community-title">
+      <div class="community-title-row">
+        <span class="community-document-icon" aria-hidden="true"></span>
+        <h1 id="community-title">Community</h1>
+      </div>
     </section>
 
-    <div class="write-button-wrapper">
-      <button class="write-post-button" type="button">
-        게시글 작성
-      </button>
+    <section class="post-toolbar" aria-label="게시글 보기 설정">
+      <div class="post-toolbar-actions">
+        <button class="write-post-button" type="button">
+          글쓰기
+        </button>
+
+        <div class="post-view-toggle" role="group" aria-label="게시글 보기 방식">
+          <button
+            class="post-view-button"
+            type="button"
+            data-view-mode="list"
+            aria-label="줄글형으로 보기"
+            aria-pressed="true"
+          >
+            <span class="list-view-icon" aria-hidden="true"></span>
+          </button>
+
+          <span class="post-view-divider" aria-hidden="true"></span>
+
+          <button
+            class="post-view-button"
+            type="button"
+            data-view-mode="card"
+            aria-label="카드형으로 보기"
+            aria-pressed="false"
+          >
+            <span class="card-view-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="post-list is-list-view" id="post-list" aria-live="polite"></section>
+
+    <div class="post-load-state" id="post-load-state" role="status">
+      게시글을 불러오는 중입니다.
     </div>
 
-    <section class="post-list" id="post-list">
-      <!-- 정적 화면 확인용 더미 게시글 카드입니다.
-           나중에 Fetch 단계에서 서버 데이터로 렌더링할 예정입니다. -->
-
-      <article class="post-card" data-post-id="1">
-        <div class="post-card-content">
-          <h2 class="post-title">제목 1</h2>
-
-          <div class="post-info-row">
-            <div class="post-stats">
-              <span>좋아요 0</span>
-              <span>댓글 0</span>
-              <span>조회수 0</span>
-            </div>
-
-            <time class="post-date">2021-01-01 00:00:00</time>
-          </div>
-        </div>
-
-        <div class="post-author-row">
-          <div class="author-profile"></div>
-          <span class="author-name">더미 작성자 1</span>
-        </div>
-      </article>
-
-      <article class="post-card" data-post-id="2">
-        <div class="post-card-content">
-          <h2 class="post-title">제목 1</h2>
-
-          <div class="post-info-row">
-            <div class="post-stats">
-              <span>좋아요 0</span>
-              <span>댓글 0</span>
-              <span>조회수 0</span>
-            </div>
-
-            <time class="post-date">2021-01-01 00:00:00</time>
-          </div>
-        </div>
-
-        <div class="post-author-row">
-          <div class="author-profile"></div>
-          <span class="author-name">더미 작성자 1</span>
-        </div>
-      </article>
-
-      <article class="post-card" data-post-id="3">
-        <div class="post-card-content">
-          <h2 class="post-title">제목 1</h2>
-
-          <div class="post-info-row">
-            <div class="post-stats">
-              <span>좋아요 0</span>
-              <span>댓글 0</span>
-              <span>조회수 0</span>
-            </div>
-
-            <time class="post-date">2021-01-01 00:00:00</time>
-          </div>
-        </div>
-
-        <div class="post-author-row">
-          <div class="author-profile"></div>
-          <span class="author-name">더미 작성자 1</span>
-        </div>
-      </article>
-
-      <article class="post-card" data-post-id="4">
-        <div class="post-card-content">
-          <h2 class="post-title">제목 1</h2>
-
-          <div class="post-info-row">
-            <div class="post-stats">
-              <span>좋아요 0</span>
-              <span>댓글 0</span>
-              <span>조회수 0</span>
-            </div>
-
-            <time class="post-date">2021-01-01 00:00:00</time>
-          </div>
-        </div>
-
-        <div class="post-author-row">
-          <div class="author-profile"></div>
-          <span class="author-name">더미 작성자 1</span>
-        </div>
-      </article>
-    </section>
+    <div class="post-scroll-sentinel" id="post-scroll-sentinel" aria-hidden="true"></div>
   </main>
 
+  <button class="scroll-top-button" type="button" aria-label="맨 위로 이동">
+    ↑
+  </button>
+
   <script type="module" src="../js/common/navigation.js"></script>
-  <script type="module" src="../js/posts.js"></script>
+  <script type="module" src="../js/posts.js?v=20260713-community-optional-image"></script>
 </body>
 </html>

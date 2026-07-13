@@ -7,46 +7,199 @@ import {
 } from "./common/auth.js";
 
 
+const POST_PAGE_SIZE = 10;
+const DEFAULT_VIEW_MODE = "list";
+const VIEW_MODE_STORAGE_KEY = "communityPostViewMode";
+
 const writePostButton =
     document.querySelector(".write-post-button");
 
 const postList =
     document.querySelector("#post-list");
 
-const headerProfileButton =
-    document.querySelector(".header-profile-button");
+const loadState =
+    document.querySelector("#post-load-state");
+
+const scrollSentinel =
+    document.querySelector("#post-scroll-sentinel");
+
+const scrollTopButton =
+    document.querySelector(".scroll-top-button");
+
+const viewButtons =
+    document.querySelectorAll(".post-view-button");
 
 
-// 게시글 카드 HTML 생성
-function createPostCardHTML(post) {
+let posts = [];
+let currentViewMode =
+    localStorage.getItem(VIEW_MODE_STORAGE_KEY) ??
+    DEFAULT_VIEW_MODE;
+let nextCursor = null;
+let hasNext = true;
+let isLoading = false;
+
+
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+function formatPostDate(createdAt) {
+    if(createdAt === null || createdAt === undefined) {
+        return "";
+    }
+
+    const normalizedDate = String(createdAt)
+        .replace(" ", "T");
+
+    const createdDate = new Date(normalizedDate);
+
+    if(Number.isNaN(createdDate.getTime())) {
+        return String(createdAt);
+    }
+
+    const diffMilliseconds =
+        Date.now() - createdDate.getTime();
+
+    const diffMinutes =
+        Math.floor(diffMilliseconds / 60000);
+
+    if(diffMinutes < 1) {
+        return "방금 전";
+    }
+
+    if(diffMinutes < 60) {
+        return `${diffMinutes}분 전`;
+    }
+
+    const diffHours =
+        Math.floor(diffMinutes / 60);
+
+    if(diffHours < 24) {
+        return `${diffHours}시간 전`;
+    }
+
+    const diffDays =
+        Math.floor(diffHours / 24);
+
+    if(diffDays < 7) {
+        return `${diffDays}일 전`;
+    }
+
+    return createdAt.slice(0, 10);
+}
+
+
+function hasImage(imageName) {
+    return !(
+        imageName === null ||
+        imageName === undefined ||
+        imageName === ""
+    );
+}
+
+
+function createImageHTML(imageName, className) {
+    if(imageName === null || imageName === undefined || imageName === "") {
+        return "";
+    }
+
+    const escapedImageName =
+        escapeHTML(imageName);
+
+    const imageSource =
+        imageName.startsWith("http") ||
+        imageName.startsWith("/") ||
+        imageName.startsWith("../")
+            ? escapedImageName
+            : `../assets/${escapedImageName}`;
+
     return `
-        <article class="post-card" data-post-id="${post.postId}">
-            <div class="post-card-content">
-                <h2 class="post-title">${post.title}</h2>
+        <div class="${className}">
+            <img src="${imageSource}" alt="">
+        </div>
+    `;
+}
 
-                <div class="post-info-row">
-                    <div class="post-stats">
-                        <span>좋아요 ${post.likeCount}</span>
-                        <span>댓글 ${post.commentCount}</span>
-                        <span>조회수 ${post.viewCount}</span>
-                    </div>
 
-                    <time class="post-date">${post.createdAt}</time>
+function createListPostHTML(post) {
+    return `
+        <article class="post-item post-list-row ${hasImage(post.contentImage) ? "" : "has-no-image"}" data-post-id="${post.postId}">
+            <div class="post-list-text">
+                <h2 class="post-list-title">${escapeHTML(post.title)}</h2>
+                <div class="post-list-meta">
+                    <span>${escapeHTML(post.authorNickname)}</span>
+                    <span aria-hidden="true">·</span>
+                    <time>${escapeHTML(formatPostDate(post.createdAt))}</time>
+                    <span aria-hidden="true">·</span>
+                    <span>조회수 ${post.viewCount}</span>
                 </div>
             </div>
 
-            <div class="post-author-row">
-                <div class="author-profile"></div>
-                <span class="author-name">${post.authorNickname}</span>
+            ${createImageHTML(post.contentImage, "post-list-thumb")}
+        </article>
+    `;
+}
+
+
+function createCardPostHTML(post) {
+    return `
+        <article class="post-item post-card-view" data-post-id="${post.postId}">
+            <div class="post-card-author-row">
+                <div class="post-author-avatar" aria-hidden="true"></div>
+                <strong class="post-card-author">${escapeHTML(post.authorNickname)}</strong>
+            </div>
+
+            ${createImageHTML(post.contentImage, "post-card-image")}
+
+            <p class="post-card-body">${escapeHTML(post.content)}</p>
+
+            <div class="post-card-meta">
+                <time>${escapeHTML(formatPostDate(post.createdAt))}</time>
+            </div>
+
+            <div class="post-card-stats">
+                <span>♥ ${post.likeCount}</span>
+                <span aria-hidden="true">·</span>
+                <span>댓글 ${post.commentCount}</span>
+                <span aria-hidden="true">·</span>
+                <span>조회수 ${post.viewCount}</span>
             </div>
         </article>
     `;
 }
 
 
-// 게시글 목록 렌더링
-function renderPosts(posts) {
-    postList.innerHTML = "";
+function updateViewModeClass() {
+    postList.classList.toggle(
+        "is-list-view",
+        currentViewMode === "list"
+    );
+
+    postList.classList.toggle(
+        "is-card-view",
+        currentViewMode === "card"
+    );
+
+    viewButtons.forEach(function(button) {
+        const isSelected =
+            button.dataset.viewMode === currentViewMode;
+
+        button.setAttribute(
+            "aria-pressed",
+            String(isSelected)
+        );
+    });
+}
+
+
+function renderPosts() {
+    updateViewModeClass();
 
     if(posts.length === 0) {
         postList.innerHTML = `
@@ -57,36 +210,79 @@ function renderPosts(posts) {
         return;
     }
 
-    posts.forEach(function(post) {
-        const postCardHTML =
-            createPostCardHTML(post);
+    const postHTMLList = posts.map(function(post) {
+        if(currentViewMode === "card") {
+            return createCardPostHTML(post);
+        }
 
-        postList.insertAdjacentHTML(
-            "beforeend",
-            postCardHTML
-        );
+        return createListPostHTML(post);
     });
+
+    postList.innerHTML = postHTMLList.join("");
 }
 
 
-// 백엔드 snake_case 응답을 camelCase로 변경
 function normalizePost(post) {
+    const title =
+        post.title ?? "";
+
     return {
         postId: post.post_id,
-        title: post.title,
-        likeCount: post.like_count,
-        commentCount: post.comment_count,
-        viewCount: post.view_count,
-        createdAt: post.created_at,
-        authorNickname: post.author
+        title: title,
+        content: post.content ?? title,
+        contentImage:
+            post.content_image ??
+            post.contentImage ??
+            post.image_url ??
+            post.imageUrl ??
+            null,
+        authorProfileImage:
+            post.author_profile_image ??
+            post.authorProfileImage ??
+            post.profile_image ??
+            post.profileImage ??
+            null,
+        likeCount: post.like_count ?? 0,
+        commentCount: post.comment_count ?? 0,
+        viewCount: post.view_count ?? 0,
+        createdAt: post.created_at ?? "",
+        authorNickname: post.author ?? "익명"
     };
 }
 
 
-// 게시글 목록 조회
+function updateLoadState(message) {
+    loadState.textContent = message;
+}
+
+
 async function fetchPosts() {
+    if(isLoading || !hasNext) {
+        return;
+    }
+
+    isLoading = true;
+    updateLoadState("게시글을 불러오는 중입니다.");
+
+    const searchParams =
+        new URLSearchParams({
+            size: String(POST_PAGE_SIZE)
+        });
+
+    if(nextCursor !== null) {
+        searchParams.set(
+            "cursor",
+            String(nextCursor)
+        );
+    }
+
     try {
-        const result = await apiRequest("/posts");
+        const result = await apiRequest(
+            `/posts?${searchParams.toString()}`,
+            {
+                skipAuth: true
+            }
+        );
 
         if(!result.ok) {
             console.log(
@@ -94,18 +290,11 @@ async function fetchPosts() {
                 result.status
             );
 
-            postList.innerHTML = `
-                <p class="empty-post-message">
-                    게시글 목록을 불러오지 못했습니다.
-                </p>
-            `;
+            updateLoadState(
+                "게시글 목록을 불러오지 못했습니다."
+            );
             return;
         }
-
-        console.log(
-            "게시글 목록 응답:",
-            result.body
-        );
 
         const postData =
             result.body?.data?.posts;
@@ -116,19 +305,35 @@ async function fetchPosts() {
                 result.body
             );
 
-            postList.innerHTML = `
-                <p class="empty-post-message">
-                    게시글 응답 데이터가 올바르지 않습니다.
-                </p>
-            `;
+            updateLoadState(
+                "게시글 응답 데이터가 올바르지 않습니다."
+            );
             return;
         }
 
-        const posts = postData.map(function(post) {
-            return normalizePost(post);
-        });
+        const nextPosts =
+            postData.map(function(post) {
+                return normalizePost(post);
+            });
 
-        renderPosts(posts);
+        posts = posts.concat(nextPosts);
+        hasNext =
+            result.body?.data?.has_next ?? false;
+        nextCursor =
+            result.body?.data?.next_cursor ?? null;
+
+        renderPosts();
+
+        if(posts.length === 0) {
+            updateLoadState("");
+            return;
+        }
+
+        updateLoadState(
+            hasNext
+                ? "스크롤하면 다음 게시글을 불러옵니다."
+                : "마지막 게시글입니다."
+        );
 
     } catch(error) {
         console.error(
@@ -136,16 +341,13 @@ async function fetchPosts() {
             error
         );
 
-        postList.innerHTML = `
-            <p class="empty-post-message">
-                서버와 연결할 수 없습니다.
-            </p>
-        `;
+        updateLoadState("서버와 연결할 수 없습니다.");
+    } finally {
+        isLoading = false;
     }
 }
 
 
-// 게시글 작성 페이지 이동
 writePostButton.addEventListener("click", function() {
     if(!requireLogin()) {
         return;
@@ -155,31 +357,68 @@ writePostButton.addEventListener("click", function() {
 });
 
 
-// 게시글 카드 클릭
-postList.addEventListener("click", function(event) {
-    const postCard =
-        event.target.closest(".post-card");
+viewButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+        currentViewMode =
+            button.dataset.viewMode ?? DEFAULT_VIEW_MODE;
 
-    if(postCard === null) {
+        localStorage.setItem(
+            VIEW_MODE_STORAGE_KEY,
+            currentViewMode
+        );
+
+        renderPosts();
+    });
+});
+
+
+postList.addEventListener("click", function(event) {
+    const postItem =
+        event.target.closest(".post-item");
+
+    if(postItem === null) {
         return;
     }
 
     const postId =
-        postCard.dataset.postId;
+        postItem.dataset.postId;
 
     window.location.href =
         `./post-detail.html?postId=${postId}`;
 });
 
 
-// 회원정보 페이지 이동
-headerProfileButton.addEventListener(
-    "click",
-    function() {
-        window.location.href = "./user-edit.html";
-    }
-);
+scrollTopButton.addEventListener("click", function() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
 
 
-// 최초 게시글 목록 조회
+window.addEventListener("scroll", function() {
+    const shouldShowButton =
+        window.scrollY > 420;
+
+    scrollTopButton.classList.toggle(
+        "is-visible",
+        shouldShowButton
+    );
+});
+
+
+const observer =
+    new IntersectionObserver(function(entries) {
+        const firstEntry = entries[0];
+
+        if(firstEntry.isIntersecting) {
+            fetchPosts();
+        }
+    }, {
+        rootMargin: "400px 0px"
+    });
+
+observer.observe(scrollSentinel);
+
+updateViewModeClass();
 fetchPosts();

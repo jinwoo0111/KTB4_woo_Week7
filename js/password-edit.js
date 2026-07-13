@@ -13,7 +13,8 @@ import {
 } from "./common/api.js";
 
 import {
-    requireUserId
+    requireUserId,
+    clearAuth
 } from "./common/auth.js";
 
 
@@ -36,16 +37,23 @@ const passwordUpdateButton =
         ".password-update-button"
     );
 
-const headerProfileButton =
-    document.querySelector(
-        ".header-profile-button"
-    );
+const userEditButton =
+    document.querySelector(".user-edit-menu");
 
-const backButton =
-    document.querySelector(".back-button");
+const logoutButton =
+    document.querySelector(".logout-menu");
 
 const toastMessage =
     document.querySelector(".toast-message");
+
+const profileDisplayName =
+    document.querySelector(".profile-display-name");
+
+const emailText =
+    document.querySelector(".user-email");
+
+const profileImage =
+    document.querySelector(".password-profile-image");
 
 
 const PASSWORD_EMPTY_MESSAGE =
@@ -62,6 +70,53 @@ const PASSWORD_NOT_EQUAL_MESSAGE =
 
 
 const userId = requireUserId();
+
+
+function renderUserInfo(user) {
+    profileDisplayName.textContent =
+        user.nickname ?? "회원님";
+
+    emailText.textContent =
+        user.email ?? "";
+
+    const profileImageName =
+        user.profile_image ??
+        user.profileImage ??
+        null;
+
+    if(profileImageName !== null && profileImageName !== "") {
+        profileImage.style.backgroundImage =
+            `url("../assets/${profileImageName}")`;
+    }
+}
+
+
+async function fetchUserInfo() {
+    if(userId === null) {
+        return;
+    }
+
+    try {
+        const result = await apiRequest(
+            `/users/${userId}`
+        );
+
+        if(!result.ok) {
+            return;
+        }
+
+        const user = result.body?.data;
+
+        if(user !== null && user !== undefined) {
+            renderUserInfo(user);
+        }
+    } catch(error) {
+        console.error(
+            "회원정보 조회 중 오류:",
+            error
+        );
+    }
+}
 
 
 function resetPasswordForm() {
@@ -218,7 +273,7 @@ passwordUpdateButton.addEventListener(
 );
 
 
-backButton.addEventListener(
+userEditButton.addEventListener(
     "click",
     function() {
         window.location.href = "./user-edit.html";
@@ -226,12 +281,15 @@ backButton.addEventListener(
 );
 
 
-headerProfileButton.addEventListener(
+logoutButton.addEventListener(
     "click",
     function() {
-        window.location.href = "./user-edit.html";
+        clearAuth();
+        window.location.href = "./login.html";
     }
 );
 
 
 passwordUpdateButton.disabled = true;
+
+fetchUserInfo();

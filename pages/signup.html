@@ -30,93 +30,104 @@
   </header>
 
   <main class="page-main signup-main">
-    <h2 class="page-title">회원가입</h2>
+    <section class="signup-card" aria-labelledby="signup-title">
+      <p class="signup-kicker">RESCENE FAN COMMUNITY</p>
+      <h2 class="page-title" id="signup-title">회원가입</h2>
 
-    <form class="form signup-form">
-      <div class="profile-section">
-        <p class="profile-label">프로필 사진*</p>
+      <form class="form signup-form">
+        <div class="profile-section">
+          <p class="profile-label">프로필 사진</p>
 
-        <label class="profile-upload" for="profile-image">
-          <span class="profile-plus-icon">+</span>
-          <img class="profile-preview-image" alt="프로필 미리보기">
-        </label>
+          <label class="profile-upload" for="profile-image">
+            <span class="profile-plus-icon">+</span>
+            <img class="profile-preview-image" alt="프로필 미리보기">
+          </label>
 
-        <input
-          id="profile-image"
-          class="profile-input"
-          type="file"
-          accept="image/*"
-        >
+          <input
+            id="profile-image"
+            class="profile-input"
+            type="file"
+            accept="image/*"
+          >
 
-        <p class="helper-text profile-helper-text">
-          프로필 사진을 추가해주세요.
-        </p>
+          <p class="helper-text profile-helper-text">
+            프로필 사진을 추가해주세요.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">이메일</label>
+          <input
+            class="form-input"
+            id="email"
+            type="email"
+            autocomplete="email"
+            placeholder="이메일을 입력하세요"
+          >
+          <p class="helper-text email-helper-text">
+            이메일을 입력해주세요.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">비밀번호</label>
+          <input
+            class="form-input"
+            id="password"
+            type="password"
+            autocomplete="new-password"
+            placeholder="비밀번호를 입력하세요"
+          >
+          <p class="helper-text password-helper-text">
+            비밀번호를 입력해주세요.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password-confirm">비밀번호 확인</label>
+          <input
+            class="form-input"
+            id="password-confirm"
+            type="password"
+            autocomplete="new-password"
+            placeholder="비밀번호를 한번 더 입력하세요"
+          >
+          <p class="helper-text password-confirm-helper-text">
+            비밀번호가 다릅니다.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="nickname">닉네임</label>
+          <input
+            class="form-input"
+            id="nickname"
+            type="text"
+            autocomplete="nickname"
+            placeholder="닉네임을 입력하세요"
+          >
+          <p class="helper-text nickname-helper-text">
+            닉네임을 입력해주세요.
+          </p>
+        </div>
+
+        <button class="primary-button signup-button" type="button">
+          회원가입
+        </button>
+
+        <button class="text-button login-link-button" type="button">
+          로그인하러 가기
+        </button>
+      </form>
+
+      <div class="toast-message" role="status" aria-live="polite">
+        회원가입 성공
       </div>
-
-      <div class="form-group">
-        <label class="form-label" for="email">이메일*</label>
-        <input
-          class="form-input"
-          id="email"
-          type="email"
-          placeholder="이메일을 입력하세요"
-        >
-        <p class="helper-text email-helper-text">
-          이메일을 입력해주세요.
-        </p>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="password">비밀번호*</label>
-        <input
-          class="form-input"
-          id="password"
-          type="password"
-          placeholder="비밀번호를 입력하세요"
-        >
-        <p class="helper-text password-helper-text">
-          비밀번호를 입력해주세요.
-        </p>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="password-confirm">비밀번호 확인*</label>
-        <input
-          class="form-input"
-          id="password-confirm"
-          type="password"
-          placeholder="비밀번호를 한번 더 입력하세요"
-        >
-        <p class="helper-text password-confirm-helper-text">
-          비밀번호가 다릅니다.
-        </p>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="nickname">닉네임*</label>
-        <input
-          class="form-input"
-          id="nickname"
-          type="text"
-          placeholder="닉네임을 입력하세요"
-        >
-        <p class="helper-text nickname-helper-text">
-          닉네임을 입력해주세요.
-        </p>
-      </div>
-
-      <button class="primary-button signup-button" type="button">
-        회원가입
-      </button>
-
-      <button class="text-button login-link-button" type="button">
-        로그인하러 가기
-      </button>
-    </form>
+    </section>
   </main>
 
   <script type="module" src="../js/common/navigation.js"></script>
-  <script type="module" src="../js/signup.js"></script>
+  <script type="module" src="../js/signup.js?v=20260713-signup-feedback"></script>
 </body>
 
 </html>

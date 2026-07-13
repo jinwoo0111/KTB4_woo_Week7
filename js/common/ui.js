@@ -2,7 +2,7 @@ export function showHelperText(helperTextElement, message) {
     if(helperTextElement === null) {
         return ;
     }
-    helperTextElement.textElement = message;
+    helperTextElement.textContent = message;
     helperTextElement.style.visibility = "visible";
 }
 

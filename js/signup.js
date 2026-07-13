@@ -1,6 +1,7 @@
 import {
     showHelperText,
-    hideHelperText
+    hideHelperText,
+    showToastMessage
 } from "./common/ui.js";
 
 import {
@@ -62,6 +63,9 @@ const loginButton =
 const backButton =
     document.querySelector(".back-button");
 
+const toastMessage =
+    document.querySelector(".toast-message");
+
 
 // 2. 에러 문구
 const PROFILE_EMPTY_MESSAGE =
@@ -99,6 +103,13 @@ const NICKNAME_DUP_MESSAGE =
 
 const NICKNAME_INVALID_MESSAGE =
     "닉네임은 최대 10자까지 작성 가능합니다.";
+
+const SIGNUP_SUCCESS_TOAST_DURATION = 1200;
+
+const SIGNUP_INVALID_TOAST_MESSAGE =
+    "입력값을 확인해주세요.";
+
+const SIGNUP_INVALID_TOAST_DURATION = 1600;
 
 
 // 3. 선택한 프로필 이미지
@@ -256,13 +267,42 @@ function validateSignupForm() {
         isPasswordConfirmValid &&
         isNicknameValid;
 
-    signupButton.disabled = !isFormValid;
     signupButton.classList.toggle(
         "active",
         isFormValid
     );
 
     return isFormValid;
+}
+
+
+function showInvalidSignupFeedback() {
+    toastMessage.textContent =
+        SIGNUP_INVALID_TOAST_MESSAGE;
+
+    showToastMessage(
+        toastMessage,
+        SIGNUP_INVALID_TOAST_DURATION
+    );
+
+    const firstVisibleHelperText =
+        document.querySelector(
+            ".helper-text[style*='visible']"
+        );
+
+    if(firstVisibleHelperText !== null) {
+        const invalidField =
+            firstVisibleHelperText.closest(
+                ".profile-section, .form-group"
+            );
+
+        if(invalidField !== null) {
+            invalidField.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+    }
 }
 
 
@@ -330,6 +370,7 @@ signupButton.addEventListener("click", async function() {
     const isFormValid = validateSignupForm();
 
     if(!isFormValid) {
+        showInvalidSignupFeedback();
         return;
     }
 
@@ -388,7 +429,22 @@ signupButton.addEventListener("click", async function() {
 
         console.log("회원가입 성공");
 
-        window.location.href = "./login.html";
+        toastMessage.textContent =
+            "회원가입 성공";
+
+        showToastMessage(
+            toastMessage,
+            SIGNUP_SUCCESS_TOAST_DURATION
+        );
+
+        await new Promise(function(resolve) {
+            setTimeout(
+                resolve,
+                SIGNUP_SUCCESS_TOAST_DURATION
+            );
+        });
+
+        window.location.href = "./home.html";
 
     } catch(error) {
         console.error(
@@ -401,6 +457,7 @@ signupButton.addEventListener("click", async function() {
             "서버와 연결할 수 없습니다."
         );
     } finally {
+        signupButton.disabled = false;
         validateSignupForm();
     }
 });
@@ -419,4 +476,4 @@ backButton.addEventListener("click", function() {
 
 
 // 15. 초기 버튼 상태
-signupButton.disabled = true;
+signupButton.disabled = false;

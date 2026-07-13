@@ -1,31 +1,52 @@
 .home-main {
-  width: min(calc(100% - 32px), var(--content-width));
-  margin: 0 auto;
-  padding: 32px 0 64px;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 64px;
 }
 
 .home-hero {
-  min-height: 420px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-large);
-  background:
-    linear-gradient(120deg, rgba(200, 63, 115, 0.76), rgba(243, 169, 194, 0.5)),
-    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.92) 0 9%, transparent 10%),
-    radial-gradient(circle at 74% 62%, rgba(255, 255, 255, 0.52) 0 16%, transparent 17%),
-    linear-gradient(135deg, #fff3f8, #f9cadb 48%, #c83f73);
-  box-shadow: var(--shadow-large);
+  height: clamp(680px, 61vw, 860px);
+  background-color: #d9a4b6;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
+  justify-content: center;
   overflow: hidden;
+  position: relative;
+}
+
+.home-hero::before,
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.home-hero::before {
+  background:
+    linear-gradient(rgba(217, 164, 182, 0.18), rgba(217, 164, 182, 0.18)),
+    url("../assets/rescene_HomePageImage.jpeg") center / cover no-repeat;
+  filter: blur(22px);
+  transform: scale(1.06);
+}
+
+.home-hero::after {
+  background:
+    linear-gradient(rgba(45, 35, 40, 0.12), rgba(45, 35, 40, 0.24)),
+    url("../assets/rescene_HomePageImage.jpeg") center / contain no-repeat;
 }
 
 .home-hero-content {
-  width: min(680px, 100%);
-  padding: 56px;
+  width: min(680px, calc(100% - 32px));
+  padding-top: clamp(440px, 39vw, 560px);
   color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
-.home-hero-label,
 .home-section-label,
 .featured-post-category {
   margin: 0;
@@ -35,32 +56,26 @@
   letter-spacing: 0;
 }
 
-.home-hero-label {
-  color: rgba(255, 255, 255, 0.82);
-}
-
 .home-hero-title {
-  margin: 12px 0 16px;
-  font-size: 48px;
-  line-height: 1.12;
+  margin: 0;
+  font-size: 40px;
+  line-height: 1.1;
   font-weight: 900;
   letter-spacing: 0;
+  text-shadow: 0 10px 28px rgba(45, 35, 40, 0.34);
   overflow-wrap: anywhere;
-}
-
-.home-hero-description {
-  max-width: 540px;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 17px;
-  line-height: 1.7;
 }
 
 .home-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 32px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.home-hero-actions.is-hidden {
+  display: none;
 }
 
 .home-primary-link,
@@ -77,22 +92,28 @@
 }
 
 .home-primary-link {
+  min-width: 118px;
   padding: 0 24px;
-  background-color: #ffffff;
-  color: var(--color-primary);
+  border: 1px solid rgba(255, 255, 255, 0.66);
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  backdrop-filter: blur(8px);
 }
 
 .home-secondary-link {
+  min-width: 118px;
   padding: 0 24px;
-  border: 1px solid rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary);
   color: #ffffff;
+  box-shadow: var(--shadow-medium);
 }
 
 .home-section {
-  margin-top: 48px;
+  width: min(calc(100% - 32px), var(--content-width));
+  margin: 48px auto 0;
 }
 
-.home-intro-section,
 .home-sns-section {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
@@ -181,7 +202,7 @@
   align-items: center;
 }
 
-.sns-link-placeholder {
+.sns-link {
   min-height: 40px;
   padding: 0 16px;
   border: 1px solid var(--color-border);
@@ -192,6 +213,13 @@
   align-items: center;
   font-size: 14px;
   font-weight: 800;
+  text-decoration: none;
+}
+
+.sns-link:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: #ffffff;
 }
 
 .home-footer {
@@ -206,22 +234,21 @@
 
 @media (max-width: 767px) {
   .home-main {
-    padding-top: 24px;
+    padding-top: 0;
   }
 
   .home-hero {
-    min-height: 360px;
+    height: 430px;
   }
 
   .home-hero-content {
-    padding: 32px 24px;
+    padding-top: 164px;
   }
 
   .home-hero-title {
     font-size: 34px;
   }
 
-  .home-intro-section,
   .home-sns-section,
   .featured-post-grid {
     grid-template-columns: 1fr;
@@ -234,14 +261,13 @@
 
 @media (max-width: 520px) {
   .home-hero-title {
-    font-size: 30px;
+    font-size: 28px;
   }
 
   .home-section-title {
     font-size: 22px;
   }
 
-  .home-intro-section,
   .home-sns-section {
     padding: 24px;
   }

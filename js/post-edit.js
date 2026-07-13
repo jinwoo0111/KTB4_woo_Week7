@@ -49,9 +49,6 @@ const headerProfileButton =
 const postSubmitButton =
     document.querySelector(".post-submit-button");
 
-const backButton =
-    document.querySelector(".back-button");
-
 
 // 메시지
 const TITLE_EMPTY_MESSAGE =
@@ -386,18 +383,6 @@ postSubmitButton.addEventListener(
         }
     }
 );
-
-
-// 뒤로가기
-backButton.addEventListener("click", function() {
-    if(postId === null) {
-        window.location.href = "./posts.html";
-        return;
-    }
-
-    window.location.href =
-        `./post-detail.html?postId=${postId}`;
-});
 
 
 // 회원정보 페이지 이동

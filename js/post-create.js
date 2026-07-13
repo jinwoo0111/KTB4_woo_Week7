@@ -8,7 +8,7 @@ import {
 } from "./common/api.js";
 
 import {
-    requireUserId
+    requireLogin
 } from "./common/auth.js";
 
 
@@ -27,9 +27,6 @@ const postHelperText =
 
 const postSubmitButton =
     document.querySelector(".post-submit-button");
-
-const backButton =
-    document.querySelector(".back-button");
 
 const headerProfileButton =
     document.querySelector(".header-profile-button");
@@ -133,9 +130,7 @@ postSubmitButton.addEventListener(
             return;
         }
 
-        const userId = requireUserId();
-
-        if(userId === null) {
+        if(!requireLogin()) {
             return;
         }
 
@@ -162,8 +157,7 @@ postSubmitButton.addEventListener(
                     body: JSON.stringify({
                         title: title,
                         content: content,
-                        content_image: contentImage,
-                        author_id: Number(userId)
+                        content_image: contentImage
                     })
                 }
             );
@@ -207,13 +201,7 @@ postSubmitButton.addEventListener(
 );
 
 
-// 12. 뒤로가기
-backButton.addEventListener("click", function() {
-    window.location.href = "./posts.html";
-});
-
-
-// 13. 회원정보 페이지 이동
+// 12. 회원정보 페이지 이동
 headerProfileButton.addEventListener(
     "click",
     function() {
@@ -222,5 +210,5 @@ headerProfileButton.addEventListener(
 );
 
 
-// 14. 초기 버튼 스타일
+// 13. 초기 버튼 스타일
 updateSubmitButtonStyle();

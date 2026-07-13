@@ -157,6 +157,8 @@ function createCardPostHTML(post) {
 
             ${createImageHTML(post.contentImage, "post-card-image")}
 
+            <h2 class="post-card-title">${escapeHTML(post.title)}</h2>
+
             <p class="post-card-body">${escapeHTML(post.content)}</p>
 
             <div class="post-card-meta">

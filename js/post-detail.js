@@ -12,7 +12,8 @@ import {
 } from "./common/api.js";
 
 import {
-    requireLogin
+    requireLogin,
+    getUserId
 } from "./common/auth.js";
 
 
@@ -26,10 +27,9 @@ const postId =
         "postId"
     );
 
+const currentUserId =
+    getUserId();
 
-// 상단 버튼
-const backButton =
-    document.querySelector(".back-button");
 
 const headerProfileButton =
     document.querySelector(
@@ -254,6 +254,11 @@ function normalizePostDetail(post) {
             post.createdAt ??
             "",
 
+        authorId:
+            post.author_id ??
+            post.authorId ??
+            null,
+
         author:
             post.author ??
             post.author_nickname ??
@@ -303,6 +308,11 @@ function normalizeComment(comment) {
             comment.commentId ??
             comment.id,
 
+        authorId:
+            comment.author_id ??
+            comment.authorId ??
+            null,
+
         authorNickname:
             comment.author_nickname ??
             comment.authorNickname ??
@@ -317,6 +327,15 @@ function normalizeComment(comment) {
         content:
             comment.content ?? ""
     };
+}
+
+
+function isCurrentUser(authorId) {
+    return (
+        currentUserId !== null &&
+        authorId !== null &&
+        String(currentUserId) === String(authorId)
+    );
 }
 
 
@@ -350,6 +369,27 @@ function renderPostImage(contentImage) {
 
 // 댓글 HTML 생성
 function createCommentHTML(comment) {
+    const commentActions =
+        isCurrentUser(comment.authorId)
+            ? `
+                <button
+                    class="outline-button edit-comment-button"
+                    type="button"
+                    data-comment-id="${comment.commentId}"
+                >
+                    수정
+                </button>
+
+                <button
+                    class="outline-button delete-comment-button"
+                    type="button"
+                    data-comment-id="${comment.commentId}"
+                >
+                    삭제
+                </button>
+            `
+            : "";
+
     return `
         <article
             class="comment-item"
@@ -369,21 +409,7 @@ function createCommentHTML(comment) {
                 </div>
 
                 <div class="comment-action-buttons">
-                    <button
-                        class="outline-button edit-comment-button"
-                        type="button"
-                        data-comment-id="${comment.commentId}"
-                    >
-                        수정
-                    </button>
-
-                    <button
-                        class="outline-button delete-comment-button"
-                        type="button"
-                        data-comment-id="${comment.commentId}"
-                    >
-                        삭제
-                    </button>
+                    ${commentActions}
                 </div>
             </div>
 
@@ -465,8 +491,15 @@ function showEmptyCommentMessageIfNeeded() {
 function appendComment(comment) {
     removeEmptyCommentMessage();
 
+    const commentWithAuthor = {
+        ...comment,
+        authorId:
+            comment.authorId ??
+            currentUserId
+    };
+
     const commentHTML =
-        createCommentHTML(comment);
+        createCommentHTML(commentWithAuthor);
 
     commentList.insertAdjacentHTML(
         "beforeend",
@@ -581,6 +614,15 @@ function renderPostDetail(postData) {
 
     postContent.textContent =
         post.content;
+
+    const isPostAuthor =
+        isCurrentUser(post.authorId);
+
+    postEditButton.hidden =
+        !isPostAuthor;
+
+    postDeleteButton.hidden =
+        !isPostAuthor;
 
     likeCount.textContent =
         String(post.likeCount);
@@ -1123,16 +1165,6 @@ likeButton.addEventListener(
         } finally {
             likeButton.disabled = false;
         }
-    }
-);
-
-
-// 뒤로가기
-backButton.addEventListener(
-    "click",
-    function() {
-        window.location.href =
-            "./posts.html";
     }
 );
 

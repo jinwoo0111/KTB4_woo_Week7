@@ -13,7 +13,6 @@
   <header class="page-header global-header">
     <div class="global-header-inner">
       <div class="global-brand-area">
-        <button class="back-button" type="button" aria-label="게시글 목록으로 이동">&lt;</button>
         <a class="page-header-title global-logo" href="./home.html">
           RESCENE FAN COMMUNITY
         </a>
@@ -30,13 +29,13 @@
   </header>
 
   <main class="detail-main">
-    <article class="post-detail" data-post-id="1">
+    <article class="post-detail">
       <div class="post-detail-header">
-        <h2 class="post-detail-title">제목 1</h2>
+        <h1 class="post-detail-title"></h1>
 
         <div class="post-action-buttons">
-          <button class="outline-button edit-post-button" type="button">수정</button>
-          <button class="outline-button delete-comment-button" type="button" data-comment-id="${comment.commentId}">
+          <button class="outline-button edit-post-button" type="button" hidden>수정</button>
+          <button class="outline-button delete-post-button" type="button" hidden>
             삭제
           </button>
         </div>
@@ -45,22 +44,17 @@
       <div class="post-meta-row">
         <div class="author-info">
           <div class="author-profile"></div>
-          <span class="author-name">더미 작성자 1</span>
+          <span class="author-name"></span>
         </div>
 
-        <time class="post-date">2021-01-01 00:00:00</time>
+        <time class="post-date"></time>
       </div>
 
       <div class="divider"></div>
 
       <div class="post-image-placeholder"></div>
 
-      <p class="post-content">
-        무엇을 얘기할까요? 아무말이라면, 삶은 항상 놀라운 모험이라고 생각합니다.
-        우리는 매일 새로운 경험을 하고 배우며 성장합니다. 때로는 어려움과 도전이 있지만,
-        그것들이 우리를 더 강하고 지혜롭게 만듭니다. 또한 우리는 주변의 사람들과 연결되며
-        사랑과 지지를 받습니다. 그래서 우리의 삶은 소중하고 의미가 있습니다.
-      </p>
+      <p class="post-content"></p>
 
       <div class="post-counts">
         <button class="count-box like-button" type="button">
@@ -95,58 +89,6 @@
     </section>
 
     <section class="comment-list">
-      <!-- 정적 화면 확인용 더미 댓글입니다. 나중에 서버 데이터로 렌더링할 예정입니다. -->
-
-      <article class="comment-item" data-comment-id="1">
-        <div class="comment-header">
-          <div class="comment-author-info">
-            <div class="author-profile"></div>
-            <span class="author-name">더미 작성자 1</span>
-            <time class="comment-date">2021-01-01 00:00:00</time>
-          </div>
-
-          <div class="comment-action-buttons">
-            <button class="outline-button edit-comment-button" type="button">수정</button>
-            <button class="outline-button delete-comment-button" type="button">삭제</button>
-          </div>
-        </div>
-
-        <p class="comment-content">댓글 내용</p>
-      </article>
-
-      <article class="comment-item" data-comment-id="2">
-        <div class="comment-header">
-          <div class="comment-author-info">
-            <div class="author-profile"></div>
-            <span class="author-name">더미 작성자 1</span>
-            <time class="comment-date">2021-01-01 00:00:00</time>
-          </div>
-
-          <div class="comment-action-buttons">
-            <button class="outline-button edit-comment-button" type="button">수정</button>
-            <button class="outline-button delete-comment-button" type="button">삭제</button>
-          </div>
-        </div>
-
-        <p class="comment-content">댓글 내용</p>
-      </article>
-
-      <article class="comment-item" data-comment-id="3">
-        <div class="comment-header">
-          <div class="comment-author-info">
-            <div class="author-profile"></div>
-            <span class="author-name">더미 작성자 1</span>
-            <time class="comment-date">2021-01-01 00:00:00</time>
-          </div>
-
-          <div class="comment-action-buttons">
-            <button class="outline-button edit-comment-button" type="button">수정</button>
-            <button class="outline-button delete-comment-button" type="button">삭제</button>
-          </div>
-        </div>
-
-        <p class="comment-content">댓글 내용</p>
-      </article>
     </section>
 
     <!-- 게시글 삭제 확인 모달 -->

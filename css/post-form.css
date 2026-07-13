@@ -83,11 +83,38 @@
   border-radius: 4px;
 
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 12px;
 }
 
 .post-image-input {
+  width: min(100%, 360px);
+  min-width: 0;
+  max-width: 100%;
   font-size: 14px;
+}
+
+.existing-file-name {
+  flex: 1 1 220px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333333;
+  font-size: 14px;
+}
+
+@media (max-width: 560px) {
+  .image-input-row {
+    align-items: stretch;
+  }
+
+  .post-image-input,
+  .existing-file-name {
+    width: 100%;
+    flex-basis: 100%;
+  }
 }
 
 .post-submit-button {

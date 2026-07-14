@@ -22,6 +22,9 @@ const contentInput =
 const imageInput =
     document.querySelector("#post-image");
 
+const imageRemoveButton =
+    document.querySelector(".image-remove-button");
+
 const postHelperText =
     document.querySelector(".post-helper-text");
 
@@ -113,6 +116,14 @@ imageInput.addEventListener("change", function() {
         selectedImageFile.name
     );
 });
+
+imageRemoveButton.addEventListener(
+    "click",
+    function() {
+        selectedImageFile = null;
+        imageInput.value = "";
+    }
+);
 
 
 // 11. 게시글 작성 요청

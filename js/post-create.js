@@ -142,14 +142,41 @@ postSubmitButton.addEventListener(
 
         let contentImage = null;
 
-        if(selectedImageFile !== null) {
-            contentImage =
-                selectedImageFile.name;
-        }
-
         postSubmitButton.disabled = true;
 
         try {
+            if(selectedImageFile !== null) {
+                const imageFormData =
+                    new FormData();
+
+                imageFormData.append(
+                    "file",
+                    selectedImageFile
+                );
+
+                const uploadResult = await apiRequest(
+                    "/uploads/post",
+                    {
+                        method: "POST",
+                        body: imageFormData
+                    }
+                );
+
+                if(
+                    !uploadResult.ok ||
+                    uploadResult.body?.data?.path === undefined
+                ) {
+                    showHelperText(
+                        postHelperText,
+                        "이미지 업로드에 실패했습니다."
+                    );
+                    return;
+                }
+
+                contentImage =
+                    uploadResult.body.data.path;
+            }
+
             const result = await apiRequest(
                 "/posts",
                 {

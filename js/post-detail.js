@@ -36,6 +36,12 @@ const headerProfileButton =
         ".header-profile-button"
     );
 
+const API_BASE_URL =
+    "http://localhost:8080";
+
+const DEFAULT_PROFILE_IMAGE_URL =
+    "../assets/rescene-default-profile.jpg";
+
 
 // 게시글 영역
 const postTitle =
@@ -46,6 +52,11 @@ const postTitle =
 const postAuthor =
     document.querySelector(
         ".post-meta-row .author-name"
+    );
+
+const postAuthorProfile =
+    document.querySelector(
+        ".post-meta-row .author-profile"
     );
 
 const postDate =
@@ -265,6 +276,11 @@ function normalizePostDetail(post) {
             post.authorNickname ??
             "작성자",
 
+        authorProfileImage:
+            post.author_profile_image ??
+            post.authorProfileImage ??
+            null,
+
         content:
             post.content ?? "",
 
@@ -319,6 +335,11 @@ function normalizeComment(comment) {
             comment.author ??
             "작성자",
 
+        authorProfileImage:
+            comment.author_profile_image ??
+            comment.authorProfileImage ??
+            null,
+
         createdAt:
             comment.created_at ??
             comment.createdAt ??
@@ -356,14 +377,53 @@ function renderPostImage(contentImage) {
 
     postImage.style.display = "block";
 
+    const imageUrl = contentImage.startsWith("/")
+        ? `${API_BASE_URL}${contentImage}`
+        : `../assets/${contentImage}`;
+
     postImage.style.backgroundImage =
-        `url("../assets/${contentImage}")`;
+        `url("${imageUrl}")`;
 
     postImage.style.backgroundSize =
         "cover";
 
     postImage.style.backgroundPosition =
         "center";
+}
+
+function getProfileImageUrl(profileImage) {
+    if(profileImage === null || profileImage === undefined || profileImage === "") {
+        return DEFAULT_PROFILE_IMAGE_URL;
+    }
+
+    if(profileImage.startsWith("http")) {
+        return profileImage;
+    }
+
+    if(profileImage.startsWith("/uploads/")) {
+        return `${API_BASE_URL}${profileImage}`;
+    }
+
+    if(profileImage.startsWith("uploads/")) {
+        return `${API_BASE_URL}/${profileImage}`;
+    }
+
+    if(profileImage.startsWith("../assets/")) {
+        return profileImage;
+    }
+
+    return DEFAULT_PROFILE_IMAGE_URL;
+}
+
+function applyProfileImage(element, profileImage) {
+    if(element === null) {
+        return;
+    }
+
+    element.style.backgroundImage =
+        `url("${getProfileImageUrl(profileImage)}")`;
+    element.style.backgroundSize = "cover";
+    element.style.backgroundPosition = "center";
 }
 
 
@@ -397,7 +457,10 @@ function createCommentHTML(comment) {
         >
             <div class="comment-header">
                 <div class="comment-author-info">
-                    <div class="author-profile"></div>
+                    <div
+                        class="author-profile"
+                        style="background-image: url('${getProfileImageUrl(comment.authorProfileImage)}')"
+                    ></div>
 
                     <span class="author-name">
                         ${comment.authorNickname}
@@ -608,6 +671,11 @@ function renderPostDetail(postData) {
 
     postAuthor.textContent =
         post.author;
+
+    applyProfileImage(
+        postAuthorProfile,
+        post.authorProfileImage
+    );
 
     postDate.textContent =
         post.createdAt;

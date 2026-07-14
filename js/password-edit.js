@@ -17,6 +17,12 @@ import {
     clearAuth
 } from "./common/auth.js";
 
+const API_BASE_URL =
+    "http://localhost:8080";
+
+const DEFAULT_PROFILE_IMAGE_URL =
+    "../assets/rescene-default-profile.jpg";
+
 
 const passwordInput =
     document.querySelector("#password");
@@ -85,8 +91,16 @@ function renderUserInfo(user) {
         null;
 
     if(profileImageName !== null && profileImageName !== "") {
+        const profileImageUrl =
+            profileImageName.startsWith("/")
+                ? `${API_BASE_URL}${profileImageName}`
+                : `../assets/${profileImageName}`;
+
         profileImage.style.backgroundImage =
-            `url("../assets/${profileImageName}")`;
+            `url("${profileImageUrl}")`;
+    } else {
+        profileImage.style.backgroundImage =
+            `url("${DEFAULT_PROFILE_IMAGE_URL}")`;
     }
 }
 

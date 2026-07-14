@@ -11,6 +11,12 @@ const POST_PAGE_SIZE = 10;
 const DEFAULT_VIEW_MODE = "list";
 const VIEW_MODE_STORAGE_KEY = "communityPostViewMode";
 
+const API_BASE_URL =
+    "http://localhost:8080";
+
+const DEFAULT_PROFILE_IMAGE_URL =
+    "../assets/rescene-default-profile.jpg";
+
 const writePostButton =
     document.querySelector(".write-post-button");
 
@@ -126,6 +132,43 @@ function createImageHTML(imageName, className) {
     `;
 }
 
+function getProfileImageUrl(profileImage) {
+    if(profileImage === null || profileImage === undefined || profileImage === "") {
+        return DEFAULT_PROFILE_IMAGE_URL;
+    }
+
+    if(profileImage.startsWith("http")) {
+        return profileImage;
+    }
+
+    if(profileImage.startsWith("/uploads/")) {
+        return `${API_BASE_URL}${profileImage}`;
+    }
+
+    if(profileImage.startsWith("uploads/")) {
+        return `${API_BASE_URL}/${profileImage}`;
+    }
+
+    if(profileImage.startsWith("../assets/")) {
+        return profileImage;
+    }
+
+    return DEFAULT_PROFILE_IMAGE_URL;
+}
+
+function createAvatarHTML(profileImage) {
+    const imageUrl =
+        escapeHTML(getProfileImageUrl(profileImage));
+
+    return `
+        <div
+            class="post-author-avatar"
+            aria-hidden="true"
+            style="background-image: url('${imageUrl}')"
+        ></div>
+    `;
+}
+
 
 function createListPostHTML(post) {
     return `
@@ -151,7 +194,7 @@ function createCardPostHTML(post) {
     return `
         <article class="post-item post-card-view ${hasImage(post.contentImage) ? "has-card-image" : "no-card-image"}" data-post-id="${post.postId}">
             <div class="post-card-author-row">
-                <div class="post-author-avatar" aria-hidden="true"></div>
+                ${createAvatarHTML(post.authorProfileImage)}
                 <strong class="post-card-author">${escapeHTML(post.authorNickname)}</strong>
             </div>
 

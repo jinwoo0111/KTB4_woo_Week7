@@ -17,6 +17,12 @@ import {
     clearAuth
 } from "./common/auth.js";
 
+const API_BASE_URL =
+    "http://localhost:8080";
+
+const DEFAULT_PROFILE_IMAGE_URL =
+    "../assets/rescene-default-profile.jpg";
+
 
 const nicknameInput = document.querySelector("#nickname");
 const profileImageInput = document.querySelector("#profile-image");
@@ -136,8 +142,22 @@ function renderUserInfo(user) {
         null;
 
     if(profileImage) {
+        const profileImageUrl =
+            profileImage.startsWith("/")
+                ? `${API_BASE_URL}${profileImage}`
+                : `../assets/${profileImage}`;
+
         profileImageButton.style.backgroundImage =
-            `url("../assets/${profileImage}")`;
+            `url("${profileImageUrl}")`;
+
+        profileImageButton.style.backgroundSize =
+            "cover";
+
+        profileImageButton.style.backgroundPosition =
+            "center";
+    } else {
+        profileImageButton.style.backgroundImage =
+            `url("${DEFAULT_PROFILE_IMAGE_URL}")`;
 
         profileImageButton.style.backgroundSize =
             "cover";
@@ -218,14 +238,41 @@ userUpdateButton.addEventListener(
             nickname: nicknameInput.value.trim()
         };
 
-        if(selectedProfileImageFile !== null) {
-            requestBody.profile_image =
-                selectedProfileImageFile.name;
-        }
-
         userUpdateButton.disabled = true;
 
         try {
+            if(selectedProfileImageFile !== null) {
+                const imageFormData =
+                    new FormData();
+
+                imageFormData.append(
+                    "file",
+                    selectedProfileImageFile
+                );
+
+                const uploadResult = await apiRequest(
+                    "/uploads/profile",
+                    {
+                        method: "POST",
+                        body: imageFormData
+                    }
+                );
+
+                if(
+                    !uploadResult.ok ||
+                    uploadResult.body?.data?.path === undefined
+                ) {
+                    showHelperText(
+                        nicknameHelperText,
+                        "프로필 이미지 업로드에 실패했습니다."
+                    );
+                    return;
+                }
+
+                requestBody.profile_image =
+                    uploadResult.body.data.path;
+            }
+
             const result = await apiRequest(
                 `/users/${userId}`,
                 {

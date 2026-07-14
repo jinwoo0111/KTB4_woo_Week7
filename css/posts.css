@@ -279,8 +279,7 @@
   border: 1px solid var(--color-border);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 35% 30%, #ffffff 0 18%, transparent 19%),
-    linear-gradient(135deg, #d9eefc, #f8c2d5);
+    url("../assets/rescene-default-profile.jpg") center / cover no-repeat;
 }
 
 .post-card-author {

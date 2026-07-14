@@ -28,6 +28,9 @@ const profilePreviewImage =
 const profilePlusIcon =
     document.querySelector(".profile-plus-icon");
 
+const DEFAULT_PROFILE_IMAGE_URL =
+    "../assets/rescene-default-profile.jpg";
+
 const emailInput =
     document.querySelector("#email");
 
@@ -65,9 +68,6 @@ const toastMessage =
 
 
 // 2. 에러 문구
-const PROFILE_EMPTY_MESSAGE =
-    "프로필 사진을 추가해주세요.";
-
 const EMAIL_EMPTY_MESSAGE =
     "이메일을 입력해주세요.";
 
@@ -115,14 +115,6 @@ let selectedProfileImageFile = null;
 
 // 4. 프로필 이미지 검사
 function validateProfileImage() {
-    if(selectedProfileImageFile === null) {
-        showHelperText(
-            profileHelperText,
-            PROFILE_EMPTY_MESSAGE
-        );
-        return false;
-    }
-
     hideHelperText(profileHelperText);
     return true;
 }
@@ -313,9 +305,10 @@ profileImageInput.addEventListener(
         if(file === undefined) {
             selectedProfileImageFile = null;
 
-            profilePreviewImage.src = "";
-            profilePreviewImage.style.display = "none";
-            profilePlusIcon.style.display = "block";
+            profilePreviewImage.src =
+                DEFAULT_PROFILE_IMAGE_URL;
+            profilePreviewImage.style.display = "block";
+            profilePlusIcon.style.display = "none";
 
             validateSignupForm();
             return;
@@ -374,23 +367,38 @@ signupButton.addEventListener("click", async function() {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
     const nickname = nicknameInput.value.trim();
-    const profileImage =
-        selectedProfileImageFile.name;
-
     signupButton.disabled = true;
 
     try {
+        const signupFormData =
+            new FormData();
+
+        signupFormData.append(
+            "email",
+            email
+        );
+        signupFormData.append(
+            "password",
+            password
+        );
+        signupFormData.append(
+            "nickname",
+            nickname
+        );
+
+        if(selectedProfileImageFile !== null) {
+            signupFormData.append(
+                "profile_image",
+                selectedProfileImageFile
+            );
+        }
+
         const result = await apiRequest(
             "/users/signup",
             {
                 skipAuth: true,
                 method: "POST",
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                    nickname: nickname,
-                    profile_image: profileImage
-                })
+                body: signupFormData
             }
         );
 

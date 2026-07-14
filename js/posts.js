@@ -115,15 +115,25 @@ function createImageHTML(imageName, className) {
         return "";
     }
 
-    const escapedImageName =
-        escapeHTML(imageName);
+    let imageSource =
+        imageName;
 
-    const imageSource =
-        imageName.startsWith("http") ||
-        imageName.startsWith("/") ||
-        imageName.startsWith("../")
-            ? escapedImageName
-            : `../assets/${escapedImageName}`;
+    if(imageName.startsWith("/uploads/")) {
+        imageSource =
+            `${API_BASE_URL}${imageName}`;
+    } else if(imageName.startsWith("uploads/")) {
+        imageSource =
+            `${API_BASE_URL}/${imageName}`;
+    } else if(
+        !imageName.startsWith("http") &&
+        !imageName.startsWith("../")
+    ) {
+        imageSource =
+            `../assets/${imageName}`;
+    }
+
+    imageSource =
+        escapeHTML(imageSource);
 
     return `
         <div class="${className}">

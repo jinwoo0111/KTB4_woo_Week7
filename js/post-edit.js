@@ -43,6 +43,9 @@ const postHelperText =
 const existingFileName =
     document.querySelector(".existing-file-name");
 
+const imageRemoveButton =
+    document.querySelector(".image-remove-button");
+
 const headerProfileButton =
     document.querySelector(".header-profile-button");
 
@@ -67,6 +70,7 @@ const TITLE_N_CONTENT_NOT_VALID_MESSAGE =
 // 이미지 상태
 let selectedImageFile = null;
 let currentContentImage = null;
+let isImageRemoved = false;
 
 
 // 제목 검사
@@ -188,6 +192,7 @@ function renderPostEditForm(post) {
     contentInput.value = post.content;
 
     currentContentImage = post.contentImage;
+    isImageRemoved = false;
 
     if(existingFileName !== null) {
         if(
@@ -289,6 +294,7 @@ imageInput.addEventListener("change", function() {
     }
 
     selectedImageFile = file;
+    isImageRemoved = false;
 
     if(existingFileName !== null) {
         existingFileName.textContent = file.name;
@@ -299,6 +305,23 @@ imageInput.addEventListener("change", function() {
         selectedImageFile.name
     );
 });
+
+
+// 기존 또는 새 이미지 삭제
+imageRemoveButton.addEventListener(
+    "click",
+    function() {
+        selectedImageFile = null;
+        currentContentImage = null;
+        isImageRemoved = true;
+        imageInput.value = "";
+
+        if(existingFileName !== null) {
+            existingFileName.textContent =
+                "이미지 없음";
+        }
+    }
+);
 
 
 // 게시글 수정 요청
@@ -322,16 +345,45 @@ postSubmitButton.addEventListener(
             contentInput.value.trim();
 
         let contentImage =
-            currentContentImage;
-
-        if(selectedImageFile !== null) {
-            contentImage =
-                selectedImageFile.name;
-        }
+            isImageRemoved
+                ? ""
+                : currentContentImage;
 
         postSubmitButton.disabled = true;
 
         try {
+            if(selectedImageFile !== null) {
+                const imageFormData =
+                    new FormData();
+
+                imageFormData.append(
+                    "file",
+                    selectedImageFile
+                );
+
+                const uploadResult = await apiRequest(
+                    "/uploads/post",
+                    {
+                        method: "POST",
+                        body: imageFormData
+                    }
+                );
+
+                if(
+                    !uploadResult.ok ||
+                    uploadResult.body?.data?.path === undefined
+                ) {
+                    showHelperText(
+                        postHelperText,
+                        "이미지 업로드에 실패했습니다."
+                    );
+                    return;
+                }
+
+                contentImage =
+                    uploadResult.body.data.path;
+            }
+
             const result = await apiRequest(
                 `/posts/${postId}`,
                 {

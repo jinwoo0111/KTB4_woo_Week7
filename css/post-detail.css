@@ -1,5 +1,5 @@
 .detail-main {
-  width: 592px;
+  width: 520px;
   max-width: calc(100% - 32px);
   margin: 0 auto;
   padding-top: 32px;
@@ -90,10 +90,10 @@
 
 .post-image-placeholder {
   width: 100%;
-  height: 306px;
-  background-color: #d9d9d9;
-  background-size: cover;
-  background-position: center;
+  height: auto;
+  max-width: 100%;
+  display: none;
+  object-fit: contain;
 }
 
 .post-content {

@@ -109,6 +109,51 @@ const postDeleteButton =
     );
 
 
+function formatPostDate(createdAt) {
+    if(createdAt === null || createdAt === undefined || createdAt === "") {
+        return "";
+    }
+
+    const rawDate = String(createdAt);
+    const normalizedDate = rawDate.replace(" ", "T");
+    const createdDate = new Date(normalizedDate);
+
+    if(Number.isNaN(createdDate.getTime())) {
+        return rawDate;
+    }
+
+    const diffMilliseconds =
+        Date.now() - createdDate.getTime();
+
+    const diffMinutes =
+        Math.floor(diffMilliseconds / 60000);
+
+    if(diffMinutes < 1) {
+        return "방금 전";
+    }
+
+    if(diffMinutes < 60) {
+        return `${diffMinutes}분 전`;
+    }
+
+    const diffHours =
+        Math.floor(diffMinutes / 60);
+
+    if(diffHours < 24) {
+        return `${diffHours}시간 전`;
+    }
+
+    const diffDays =
+        Math.floor(diffHours / 24);
+
+    if(diffDays < 7) {
+        return `${diffDays}일 전`;
+    }
+
+    return rawDate.slice(0, 10);
+}
+
+
 // 댓글 입력
 const commentInput =
     document.querySelector(".comment-input");
@@ -371,24 +416,26 @@ function renderPostImage(contentImage) {
         contentImage === ""
     ) {
         postImage.style.display = "none";
-        postImage.style.backgroundImage = "";
+        postImage.removeAttribute("src");
         return;
     }
 
     postImage.style.display = "block";
 
-    const imageUrl = contentImage.startsWith("/")
-        ? `${API_BASE_URL}${contentImage}`
-        : `../assets/${contentImage}`;
+    let imageUrl = contentImage;
 
-    postImage.style.backgroundImage =
-        `url("${imageUrl}")`;
+    if(contentImage.startsWith("/uploads/")) {
+        imageUrl = `${API_BASE_URL}${contentImage}`;
+    } else if(contentImage.startsWith("uploads/")) {
+        imageUrl = `${API_BASE_URL}/${contentImage}`;
+    } else if(
+        !contentImage.startsWith("http") &&
+        !contentImage.startsWith("../")
+    ) {
+        imageUrl = `../assets/${contentImage}`;
+    }
 
-    postImage.style.backgroundSize =
-        "cover";
-
-    postImage.style.backgroundPosition =
-        "center";
+    postImage.src = imageUrl;
 }
 
 function getProfileImageUrl(profileImage) {
@@ -467,7 +514,7 @@ function createCommentHTML(comment) {
                     </span>
 
                     <time class="comment-date">
-                        ${comment.createdAt}
+                        ${formatPostDate(comment.createdAt)}
                     </time>
                 </div>
 
@@ -604,7 +651,7 @@ function updateCommentItem(comment) {
 
     if(commentDate !== null) {
         commentDate.textContent =
-            comment.createdAt;
+            formatPostDate(comment.createdAt);
     }
 
     if(commentContent !== null) {
@@ -678,7 +725,7 @@ function renderPostDetail(postData) {
     );
 
     postDate.textContent =
-        post.createdAt;
+        formatPostDate(post.createdAt);
 
     postContent.textContent =
         post.content;

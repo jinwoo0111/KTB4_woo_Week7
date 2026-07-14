@@ -289,6 +289,15 @@
 }
 
 .post-card-image {
+  background: #000000;
+}
+
+.post-card-image img {
+  object-fit: contain;
+  background-color: #000000;
+}
+
+.post-card-image {
   width: 100%;
   aspect-ratio: 16 / 7;
   border-radius: var(--radius-small);

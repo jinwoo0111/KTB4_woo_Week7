@@ -1,5 +1,7 @@
 import {
-    getAccessToken
+    getAccessToken,
+    clearAuth,
+    redirectToLogin
 } from "./auth.js";
 
 const API_BASE_URL =
@@ -56,6 +58,21 @@ export async function apiRequest(
             headers
         }
     );
+
+    const hasAuthorization = headers.has("Authorization");
+
+    if(response.status === 401 && !skipAuth && hasAuthorization) {
+        clearAuth();
+        redirectToLogin();
+
+        return {
+            response,
+            body: null,
+            ok: false,
+            status: response.status,
+            authExpired: true
+        };
+    }
 
     const contentType =
         response.headers.get("content-type") || "";

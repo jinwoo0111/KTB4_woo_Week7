@@ -1259,6 +1259,34 @@ likeButton.addEventListener(
                     result.status,
                     result.body
                 );
+
+                if(result.authExpired) {
+                    return;
+                }
+
+                if(result.status === 403) {
+                    alert(
+                        "좋아요를 처리할 권한이 없습니다."
+                    );
+                    return;
+                }
+
+                if(result.status === 409) {
+                    if(method === "POST") {
+                        alert(
+                            "이미 좋아요를 누른 게시글입니다."
+                        );
+                    } else {
+                        alert(
+                            "이미 좋아요를 취소한 게시글입니다."
+                        );
+                    }
+                    return;
+                }
+
+                alert(
+                    "좋아요 처리에 실패했습니다."
+                );
                 return;
             }
 

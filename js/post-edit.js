@@ -12,7 +12,8 @@ import {
 } from "./common/api.js";
 
 import {
-    requireLogin
+    requireLogin,
+    getUserId
 } from "./common/auth.js";
 
 
@@ -25,6 +26,9 @@ const postId =
         params,
         "postId"
     );
+
+const currentUserId =
+    getUserId();
 
 
 // HTML 요소
@@ -166,6 +170,11 @@ function normalizePostDetail(post) {
             post.postId ??
             post.id,
 
+        authorId:
+            post.author_id ??
+            post.authorId ??
+            null,
+
         title:
             post.title ?? "",
 
@@ -254,6 +263,19 @@ async function fetchPostDetail() {
 
         const post =
             normalizePostDetail(postData);
+
+        const isPostAuthor =
+            currentUserId !== null &&
+            post.authorId !== null &&
+            String(currentUserId) === String(post.authorId);
+
+        if(!isPostAuthor) {
+            alert(
+                "게시글 작성자만 수정할 수 있습니다."
+            );
+            window.location.replace("./posts.html");
+            return;
+        }
 
         renderPostEditForm(post);
 

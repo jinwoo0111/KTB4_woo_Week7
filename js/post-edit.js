@@ -225,6 +225,10 @@ async function fetchPostDetail() {
                 result.body
             );
 
+            if(result.authExpired) {
+                return;
+            }
+
             alert("게시글을 불러오지 못했습니다.");
             window.location.href = "./posts.html";
             return;
@@ -373,6 +377,10 @@ postSubmitButton.addEventListener(
                     !uploadResult.ok ||
                     uploadResult.body?.data?.path === undefined
                 ) {
+                    if(uploadResult.authExpired) {
+                        return;
+                    }
+
                     showHelperText(
                         postHelperText,
                         "이미지 업로드에 실패했습니다."
@@ -402,6 +410,18 @@ postSubmitButton.addEventListener(
                     result.status,
                     result.body
                 );
+
+                if(result.authExpired) {
+                    return;
+                }
+
+                if(result.errorType === "forbidden") {
+                    showHelperText(
+                        postHelperText,
+                        "게시글을 수정할 권한이 없습니다."
+                    );
+                    return;
+                }
 
                 showHelperText(
                     postHelperText,

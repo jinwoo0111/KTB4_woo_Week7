@@ -177,6 +177,10 @@ postSubmitButton.addEventListener(
                     !uploadResult.ok ||
                     uploadResult.body?.data?.path === undefined
                 ) {
+                    if(uploadResult.authExpired) {
+                        return;
+                    }
+
                     showHelperText(
                         postHelperText,
                         "이미지 업로드에 실패했습니다."
@@ -205,6 +209,18 @@ postSubmitButton.addEventListener(
                     "게시글 작성 실패 상태코드:",
                     result.status
                 );
+
+                if(result.authExpired) {
+                    return;
+                }
+
+                if(result.errorType === "forbidden") {
+                    showHelperText(
+                        postHelperText,
+                        "게시글을 작성할 권한이 없습니다."
+                    );
+                    return;
+                }
 
                 showHelperText(
                     postHelperText,

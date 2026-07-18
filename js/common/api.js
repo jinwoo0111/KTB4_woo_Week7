@@ -61,7 +61,7 @@ export async function apiRequest(
 
     const hasAuthorization = headers.has("Authorization");
 
-    if(response.status === 401 && !skipAuth && hasAuthorization) {
+    if(response.status === 401 && hasAuthorization) {
         clearAuth();
         redirectToLogin();
 
@@ -70,7 +70,8 @@ export async function apiRequest(
             body: null,
             ok: false,
             status: response.status,
-            authExpired: true
+            authExpired: true,
+            errorType: "auth-expired"
         };
     }
 
@@ -87,6 +88,13 @@ export async function apiRequest(
         response,
         body,
         ok: response.ok,
-        status: response.status
+        status: response.status,
+        authExpired: false,
+        errorType:
+            response.status === 403
+                ? "forbidden"
+                : response.status === 409
+                    ? "conflict"
+                    : null
     };
 }

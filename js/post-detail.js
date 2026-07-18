@@ -770,6 +770,10 @@ async function fetchPostDetail() {
                 result.body
             );
 
+            if(result.authExpired) {
+                return;
+            }
+
             alert("게시글을 불러오지 못했습니다.");
             window.location.href = "./posts.html";
             return;
@@ -829,6 +833,18 @@ async function createComment() {
                 result.status,
                 result.body
             );
+
+            if(result.authExpired) {
+                return;
+            }
+
+            if(result.errorType === "forbidden") {
+                showHelperText(
+                    commentHelperText,
+                    "댓글을 등록할 권한이 없습니다."
+                );
+                return;
+            }
 
             showHelperText(
                 commentHelperText,
@@ -902,6 +918,26 @@ async function updateComment() {
                 result.status,
                 result.body
             );
+
+            if(result.authExpired) {
+                return;
+            }
+
+            if(result.errorType === "forbidden") {
+                showHelperText(
+                    commentHelperText,
+                    "댓글을 수정할 권한이 없습니다."
+                );
+                return;
+            }
+
+            if(result.errorType === "conflict") {
+                showHelperText(
+                    commentHelperText,
+                    "댓글 수정 중 충돌이 발생했습니다. 새로고침 후 다시 시도해주세요."
+                );
+                return;
+            }
 
             showHelperText(
                 commentHelperText,
@@ -1048,6 +1084,19 @@ postDeleteConfirmButton.addEventListener(
                     result.body
                 );
 
+                if(result.authExpired) {
+                    closeModal(postDeleteModal);
+                    return;
+                }
+
+                if(result.errorType === "forbidden") {
+                    alert(
+                        "게시글을 삭제할 권한이 없습니다."
+                    );
+                    closeModal(postDeleteModal);
+                    return;
+                }
+
                 alert(
                     "게시글 삭제에 실패했습니다."
                 );
@@ -1185,6 +1234,30 @@ commentDeleteConfirmButton.addEventListener(
                     result.status,
                     result.body
                 );
+
+                if(result.authExpired) {
+                    selectedDeleteCommentId = null;
+                    closeModal(commentDeleteModal);
+                    return;
+                }
+
+                if(result.errorType === "forbidden") {
+                    alert(
+                        "댓글을 삭제할 권한이 없습니다."
+                    );
+                    selectedDeleteCommentId = null;
+                    closeModal(commentDeleteModal);
+                    return;
+                }
+
+                if(result.errorType === "conflict") {
+                    alert(
+                        "댓글 삭제 중 충돌이 발생했습니다. 새로고침 후 다시 시도해주세요."
+                    );
+                    selectedDeleteCommentId = null;
+                    closeModal(commentDeleteModal);
+                    return;
+                }
 
                 alert(
                     "댓글 삭제에 실패했습니다."

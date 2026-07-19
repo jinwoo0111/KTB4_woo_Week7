@@ -110,7 +110,7 @@ const postDeleteButton =
 
 
 function formatPostDate(createdAt) {
-    if(createdAt === null || createdAt === undefined || createdAt === "") {
+    if (createdAt === null || createdAt === undefined || createdAt === "") {
         return "";
     }
 
@@ -118,7 +118,7 @@ function formatPostDate(createdAt) {
     const normalizedDate = rawDate.replace(" ", "T");
     const createdDate = new Date(normalizedDate);
 
-    if(Number.isNaN(createdDate.getTime())) {
+    if (Number.isNaN(createdDate.getTime())) {
         return rawDate;
     }
 
@@ -128,25 +128,25 @@ function formatPostDate(createdAt) {
     const diffMinutes =
         Math.floor(diffMilliseconds / 60000);
 
-    if(diffMinutes < 1) {
+    if (diffMinutes < 1) {
         return "방금 전";
     }
 
-    if(diffMinutes < 60) {
+    if (diffMinutes < 60) {
         return `${diffMinutes}분 전`;
     }
 
     const diffHours =
         Math.floor(diffMinutes / 60);
 
-    if(diffHours < 24) {
+    if (diffHours < 24) {
         return `${diffHours}시간 전`;
     }
 
     const diffDays =
         Math.floor(diffHours / 24);
 
-    if(diffDays < 7) {
+    if (diffDays < 7) {
         return `${diffDays}일 전`;
     }
 
@@ -216,7 +216,7 @@ let isLiked = false;
 
 // 모달 열기
 function openModal(modalElement) {
-    if(modalElement === null) {
+    if (modalElement === null) {
         return;
     }
 
@@ -226,7 +226,7 @@ function openModal(modalElement) {
 
 // 모달 닫기
 function closeModal(modalElement) {
-    if(modalElement === null) {
+    if (modalElement === null) {
         return;
     }
 
@@ -239,7 +239,7 @@ function validateComment() {
     const comment =
         commentInput.value.trim();
 
-    if(comment === "") {
+    if (comment === "") {
         showHelperText(
             commentHelperText,
             COMMENT_EMPTY_MESSAGE
@@ -407,11 +407,11 @@ function isCurrentUser(authorId) {
 
 // 게시글 이미지 표시
 function renderPostImage(contentImage) {
-    if(postImage === null) {
+    if (postImage === null) {
         return;
     }
 
-    if(
+    if (
         contentImage === null ||
         contentImage === ""
     ) {
@@ -424,11 +424,11 @@ function renderPostImage(contentImage) {
 
     let imageUrl = contentImage;
 
-    if(contentImage.startsWith("/uploads/")) {
+    if (contentImage.startsWith("/uploads/")) {
         imageUrl = `${API_BASE_URL}${contentImage}`;
-    } else if(contentImage.startsWith("uploads/")) {
+    } else if (contentImage.startsWith("uploads/")) {
         imageUrl = `${API_BASE_URL}/${contentImage}`;
-    } else if(
+    } else if (
         !contentImage.startsWith("http") &&
         !contentImage.startsWith("../")
     ) {
@@ -439,23 +439,23 @@ function renderPostImage(contentImage) {
 }
 
 function getProfileImageUrl(profileImage) {
-    if(profileImage === null || profileImage === undefined || profileImage === "") {
+    if (profileImage === null || profileImage === undefined || profileImage === "") {
         return DEFAULT_PROFILE_IMAGE_URL;
     }
 
-    if(profileImage.startsWith("http")) {
+    if (profileImage.startsWith("http")) {
         return profileImage;
     }
 
-    if(profileImage.startsWith("/uploads/")) {
+    if (profileImage.startsWith("/uploads/")) {
         return `${API_BASE_URL}${profileImage}`;
     }
 
-    if(profileImage.startsWith("uploads/")) {
+    if (profileImage.startsWith("uploads/")) {
         return `${API_BASE_URL}/${profileImage}`;
     }
 
-    if(profileImage.startsWith("../assets/")) {
+    if (profileImage.startsWith("../assets/")) {
         return profileImage;
     }
 
@@ -463,7 +463,7 @@ function getProfileImageUrl(profileImage) {
 }
 
 function applyProfileImage(element, profileImage) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -533,13 +533,13 @@ function createCommentHTML(comment) {
 
 // 댓글 목록 렌더링
 function renderComments(comments) {
-    if(commentList === null) {
+    if (commentList === null) {
         return;
     }
 
     commentList.innerHTML = "";
 
-    if(comments.length === 0) {
+    if (comments.length === 0) {
         commentList.innerHTML = `
             <p class="empty-comment-message">
                 아직 댓글이 없습니다.
@@ -548,7 +548,7 @@ function renderComments(comments) {
         return;
     }
 
-    comments.forEach(function(comment) {
+    comments.forEach(function (comment) {
         const normalizedComment =
             normalizeComment(comment);
 
@@ -572,7 +572,7 @@ function removeEmptyCommentMessage() {
             ".empty-comment-message"
         );
 
-    if(emptyMessage !== null) {
+    if (emptyMessage !== null) {
         emptyMessage.remove();
     }
 }
@@ -585,7 +585,7 @@ function showEmptyCommentMessageIfNeeded() {
             ".comment-item"
         );
 
-    if(remainingComments.length > 0) {
+    if (remainingComments.length > 0) {
         return;
     }
 
@@ -625,7 +625,7 @@ function updateCommentItem(comment) {
             `.comment-item[data-comment-id="${comment.commentId}"]`
         );
 
-    if(commentItem === null) {
+    if (commentItem === null) {
         return;
     }
 
@@ -644,17 +644,17 @@ function updateCommentItem(comment) {
             ".comment-content"
         );
 
-    if(authorName !== null) {
+    if (authorName !== null) {
         authorName.textContent =
             comment.authorNickname;
     }
 
-    if(commentDate !== null) {
+    if (commentDate !== null) {
         commentDate.textContent =
             formatPostDate(comment.createdAt);
     }
 
-    if(commentContent !== null) {
+    if (commentContent !== null) {
         commentContent.textContent =
             comment.content;
     }
@@ -668,7 +668,7 @@ function removeCommentItem(commentId) {
             `.comment-item[data-comment-id="${commentId}"]`
         );
 
-    if(commentItem !== null) {
+    if (commentItem !== null) {
         commentItem.remove();
     }
 
@@ -763,16 +763,12 @@ async function fetchPostDetail() {
             `/posts/${postId}`
         );
 
-        if(!result.ok) {
+        if (!result.ok) {
             console.error(
                 "게시글 상세 조회 실패:",
                 result.status,
                 result.body
             );
-
-            if(result.authExpired) {
-                return;
-            }
 
             alert("게시글을 불러오지 못했습니다.");
             window.location.href = "./posts.html";
@@ -782,7 +778,7 @@ async function fetchPostDetail() {
         const postData =
             result.body?.data;
 
-        if(
+        if (
             postData === null ||
             postData === undefined
         ) {
@@ -799,7 +795,7 @@ async function fetchPostDetail() {
 
         renderPostDetail(postData);
 
-    } catch(error) {
+    } catch (error) {
         console.error(
             "게시글 상세 조회 중 오류:",
             error
@@ -827,21 +823,29 @@ async function createComment() {
             }
         );
 
-        if(!result.ok) {
+        if (!result.ok) {
             console.error(
                 "댓글 등록 실패:",
                 result.status,
                 result.body
             );
 
-            if(result.authExpired) {
+            if (result.authExpired) {
                 return;
             }
 
-            if(result.errorType === "forbidden") {
+            if (result.status === 403) {
                 showHelperText(
                     commentHelperText,
-                    "댓글을 등록할 권한이 없습니다."
+                    "댓글을 작성할 권한이 없습니다."
+                );
+                return;
+            }
+
+            if (result.status === 409) {
+                showHelperText(
+                    commentHelperText,
+                    "댓글 등록 요청이 충돌했습니다."
                 );
                 return;
             }
@@ -856,7 +860,7 @@ async function createComment() {
         const commentData =
             result.body?.data;
 
-        if(
+        if (
             commentData === null ||
             commentData === undefined
         ) {
@@ -879,7 +883,7 @@ async function createComment() {
         changeCommentCount(1);
         resetCommentForm();
 
-    } catch(error) {
+    } catch (error) {
         console.error(
             "댓글 등록 중 오류:",
             error
@@ -912,32 +916,12 @@ async function updateComment() {
             }
         );
 
-        if(!result.ok) {
+        if (!result.ok) {
             console.error(
                 "댓글 수정 실패:",
                 result.status,
                 result.body
             );
-
-            if(result.authExpired) {
-                return;
-            }
-
-            if(result.errorType === "forbidden") {
-                showHelperText(
-                    commentHelperText,
-                    "댓글을 수정할 권한이 없습니다."
-                );
-                return;
-            }
-
-            if(result.errorType === "conflict") {
-                showHelperText(
-                    commentHelperText,
-                    "댓글 수정 중 충돌이 발생했습니다. 새로고침 후 다시 시도해주세요."
-                );
-                return;
-            }
 
             showHelperText(
                 commentHelperText,
@@ -949,7 +933,7 @@ async function updateComment() {
         const commentData =
             result.body?.data;
 
-        if(
+        if (
             commentData === null ||
             commentData === undefined
         ) {
@@ -971,7 +955,7 @@ async function updateComment() {
         updateCommentItem(updatedComment);
         resetCommentForm();
 
-    } catch(error) {
+    } catch (error) {
         console.error(
             "댓글 수정 중 오류:",
             error
@@ -988,10 +972,10 @@ async function updateComment() {
 // 댓글 입력 이벤트
 commentInput.addEventListener(
     "input",
-    function() {
+    function () {
         updateCommentButtonStyle();
 
-        if(commentInput.value.trim() !== "") {
+        if (commentInput.value.trim() !== "") {
             hideHelperText(
                 commentHelperText
             );
@@ -1003,19 +987,19 @@ commentInput.addEventListener(
 // 댓글 등록 또는 수정
 commentSubmitButton.addEventListener(
     "click",
-    async function() {
-        if(!validateComment()) {
+    async function () {
+        if (!validateComment()) {
             return;
         }
 
-        if(!requireLogin()) {
+        if (!requireLogin()) {
             return;
         }
 
         commentSubmitButton.disabled = true;
 
         try {
-            if(selectedEditCommentId === null) {
+            if (selectedEditCommentId === null) {
                 await createComment();
             } else {
                 await updateComment();
@@ -1030,7 +1014,7 @@ commentSubmitButton.addEventListener(
 // 게시글 수정 페이지 이동
 postEditButton.addEventListener(
     "click",
-    function() {
+    function () {
         window.location.href =
             `./post-edit.html?postId=${postId}`;
     }
@@ -1040,8 +1024,8 @@ postEditButton.addEventListener(
 // 게시글 삭제 모달 열기
 postDeleteButton.addEventListener(
     "click",
-    function() {
-        if(!requireLogin()) {
+    function () {
+        if (!requireLogin()) {
             return;
         }
 
@@ -1053,7 +1037,7 @@ postDeleteButton.addEventListener(
 // 게시글 삭제 취소
 postDeleteCancelButton.addEventListener(
     "click",
-    function() {
+    function () {
         closeModal(postDeleteModal);
     }
 );
@@ -1062,8 +1046,8 @@ postDeleteCancelButton.addEventListener(
 // 게시글 삭제 확인
 postDeleteConfirmButton.addEventListener(
     "click",
-    async function() {
-        if(!requireLogin()) {
+    async function () {
+        if (!requireLogin()) {
             return;
         }
 
@@ -1077,25 +1061,12 @@ postDeleteConfirmButton.addEventListener(
                 }
             );
 
-            if(!result.ok) {
+            if (!result.ok) {
                 console.error(
                     "게시글 삭제 실패:",
                     result.status,
                     result.body
                 );
-
-                if(result.authExpired) {
-                    closeModal(postDeleteModal);
-                    return;
-                }
-
-                if(result.errorType === "forbidden") {
-                    alert(
-                        "게시글을 삭제할 권한이 없습니다."
-                    );
-                    closeModal(postDeleteModal);
-                    return;
-                }
 
                 alert(
                     "게시글 삭제에 실패했습니다."
@@ -1112,7 +1083,7 @@ postDeleteConfirmButton.addEventListener(
             window.location.href =
                 "./posts.html";
 
-        } catch(error) {
+        } catch (error) {
             console.error(
                 "게시글 삭제 중 오류:",
                 error
@@ -1132,7 +1103,7 @@ postDeleteConfirmButton.addEventListener(
 // 댓글 수정·삭제 이벤트 위임
 commentList.addEventListener(
     "click",
-    function(event) {
+    function (event) {
         const commentEditButton =
             event.target.closest(
                 ".edit-comment-button"
@@ -1143,13 +1114,13 @@ commentList.addEventListener(
                 ".delete-comment-button"
             );
 
-        if(commentEditButton !== null) {
+        if (commentEditButton !== null) {
             const commentItem =
                 commentEditButton.closest(
                     ".comment-item"
                 );
 
-            if(commentItem === null) {
+            if (commentItem === null) {
                 return;
             }
 
@@ -1158,7 +1129,7 @@ commentList.addEventListener(
                     ".comment-content"
                 );
 
-            if(commentContentElement === null) {
+            if (commentContentElement === null) {
                 return;
             }
 
@@ -1177,8 +1148,8 @@ commentList.addEventListener(
             return;
         }
 
-        if(commentDeleteButton !== null) {
-            if(!requireLogin()) {
+        if (commentDeleteButton !== null) {
+            if (!requireLogin()) {
                 return;
             }
 
@@ -1194,7 +1165,7 @@ commentList.addEventListener(
 // 댓글 삭제 취소
 commentDeleteCancelButton.addEventListener(
     "click",
-    function() {
+    function () {
         selectedDeleteCommentId = null;
         closeModal(commentDeleteModal);
     }
@@ -1204,13 +1175,13 @@ commentDeleteCancelButton.addEventListener(
 // 댓글 삭제 확인
 commentDeleteConfirmButton.addEventListener(
     "click",
-    async function() {
-        if(selectedDeleteCommentId === null) {
+    async function () {
+        if (selectedDeleteCommentId === null) {
             closeModal(commentDeleteModal);
             return;
         }
 
-        if(!requireLogin()) {
+        if (!requireLogin()) {
             return;
         }
 
@@ -1228,36 +1199,12 @@ commentDeleteConfirmButton.addEventListener(
                 }
             );
 
-            if(!result.ok) {
+            if (!result.ok) {
                 console.error(
                     "댓글 삭제 실패:",
                     result.status,
                     result.body
                 );
-
-                if(result.authExpired) {
-                    selectedDeleteCommentId = null;
-                    closeModal(commentDeleteModal);
-                    return;
-                }
-
-                if(result.errorType === "forbidden") {
-                    alert(
-                        "댓글을 삭제할 권한이 없습니다."
-                    );
-                    selectedDeleteCommentId = null;
-                    closeModal(commentDeleteModal);
-                    return;
-                }
-
-                if(result.errorType === "conflict") {
-                    alert(
-                        "댓글 삭제 중 충돌이 발생했습니다. 새로고침 후 다시 시도해주세요."
-                    );
-                    selectedDeleteCommentId = null;
-                    closeModal(commentDeleteModal);
-                    return;
-                }
 
                 alert(
                     "댓글 삭제에 실패했습니다."
@@ -1268,7 +1215,7 @@ commentDeleteConfirmButton.addEventListener(
                 return;
             }
 
-            if(
+            if (
                 selectedEditCommentId ===
                 deletedCommentId
             ) {
@@ -1284,7 +1231,7 @@ commentDeleteConfirmButton.addEventListener(
             selectedDeleteCommentId = null;
             closeModal(commentDeleteModal);
 
-        } catch(error) {
+        } catch (error) {
             console.error(
                 "댓글 삭제 중 오류:",
                 error
@@ -1306,8 +1253,8 @@ commentDeleteConfirmButton.addEventListener(
 // 좋아요 또는 좋아요 취소
 likeButton.addEventListener(
     "click",
-    async function() {
-        if(!requireLogin()) {
+    async function () {
+        if (!requireLogin()) {
             return;
         }
 
@@ -1326,26 +1273,26 @@ likeButton.addEventListener(
                 }
             );
 
-            if(!result.ok) {
+            if (!result.ok) {
                 console.error(
                     "좋아요 처리 실패:",
                     result.status,
                     result.body
                 );
 
-                if(result.authExpired) {
+                if (result.authExpired) {
                     return;
                 }
 
-                if(result.status === 403) {
+                if (result.status === 403) {
                     alert(
                         "좋아요를 처리할 권한이 없습니다."
                     );
                     return;
                 }
 
-                if(result.status === 409) {
-                    if(method === "POST") {
+                if (result.status === 409) {
+                    if (method === "POST") {
                         alert(
                             "이미 좋아요를 누른 게시글입니다."
                         );
@@ -1365,7 +1312,7 @@ likeButton.addEventListener(
 
             isLiked = !isLiked;
 
-            if(isLiked) {
+            if (isLiked) {
                 changeLikeCount(1);
             } else {
                 changeLikeCount(-1);
@@ -1373,7 +1320,7 @@ likeButton.addEventListener(
 
             updateLikeButtonStyle();
 
-        } catch(error) {
+        } catch (error) {
             console.error(
                 "좋아요 처리 중 오류:",
                 error
@@ -1388,7 +1335,7 @@ likeButton.addEventListener(
 // 회원정보 페이지 이동
 headerProfileButton.addEventListener(
     "click",
-    function() {
+    function () {
         window.location.href =
             "./user-edit.html";
     }
@@ -1397,7 +1344,7 @@ headerProfileButton.addEventListener(
 
 // 페이지 초기화
 async function initializePostDetailPage() {
-    if(postId === null) {
+    if (postId === null) {
         alert("잘못된 게시글 주소입니다.");
         window.location.replace("./posts.html");
         return;

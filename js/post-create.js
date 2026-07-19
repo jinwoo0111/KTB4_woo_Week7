@@ -8,7 +8,7 @@ import {
 } from "./common/api.js";
 
 import {
-    requireLogin
+    requireUserId
 } from "./common/auth.js";
 
 
@@ -22,14 +22,14 @@ const contentInput =
 const imageInput =
     document.querySelector("#post-image");
 
-const imageRemoveButton =
-    document.querySelector(".image-remove-button");
-
 const postHelperText =
     document.querySelector(".post-helper-text");
 
 const postSubmitButton =
     document.querySelector(".post-submit-button");
+
+const backButton =
+    document.querySelector(".back-button");
 
 const headerProfileButton =
     document.querySelector(".header-profile-button");
@@ -117,14 +117,6 @@ imageInput.addEventListener("change", function() {
     );
 });
 
-imageRemoveButton.addEventListener(
-    "click",
-    function() {
-        selectedImageFile = null;
-        imageInput.value = "";
-    }
-);
-
 
 // 11. 게시글 작성 요청
 postSubmitButton.addEventListener(
@@ -141,7 +133,9 @@ postSubmitButton.addEventListener(
             return;
         }
 
-        if(!requireLogin()) {
+        const userId = requireUserId();
+
+        if(userId === null) {
             return;
         }
 
@@ -153,45 +147,14 @@ postSubmitButton.addEventListener(
 
         let contentImage = null;
 
+        if(selectedImageFile !== null) {
+            contentImage =
+                selectedImageFile.name;
+        }
+
         postSubmitButton.disabled = true;
 
         try {
-            if(selectedImageFile !== null) {
-                const imageFormData =
-                    new FormData();
-
-                imageFormData.append(
-                    "file",
-                    selectedImageFile
-                );
-
-                const uploadResult = await apiRequest(
-                    "/uploads/post",
-                    {
-                        method: "POST",
-                        body: imageFormData
-                    }
-                );
-
-                if(
-                    !uploadResult.ok ||
-                    uploadResult.body?.data?.path === undefined
-                ) {
-                    if(uploadResult.authExpired) {
-                        return;
-                    }
-
-                    showHelperText(
-                        postHelperText,
-                        "이미지 업로드에 실패했습니다."
-                    );
-                    return;
-                }
-
-                contentImage =
-                    uploadResult.body.data.path;
-            }
-
             const result = await apiRequest(
                 "/posts",
                 {
@@ -209,18 +172,6 @@ postSubmitButton.addEventListener(
                     "게시글 작성 실패 상태코드:",
                     result.status
                 );
-
-                if(result.authExpired) {
-                    return;
-                }
-
-                if(result.errorType === "forbidden") {
-                    showHelperText(
-                        postHelperText,
-                        "게시글을 작성할 권한이 없습니다."
-                    );
-                    return;
-                }
 
                 showHelperText(
                     postHelperText,
@@ -255,7 +206,13 @@ postSubmitButton.addEventListener(
 );
 
 
-// 12. 회원정보 페이지 이동
+// 12. 뒤로가기
+backButton.addEventListener("click", function() {
+    window.location.href = "./posts.html";
+});
+
+
+// 13. 회원정보 페이지 이동
 headerProfileButton.addEventListener(
     "click",
     function() {
@@ -264,5 +221,5 @@ headerProfileButton.addEventListener(
 );
 
 
-// 13. 초기 버튼 스타일
+// 14. 초기 버튼 스타일
 updateSubmitButtonStyle();

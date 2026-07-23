@@ -794,6 +794,7 @@ async function fetchPostDetail() {
         }
 
         renderPostDetail(postData);
+        return true;
 
     } catch (error) {
         console.error(
@@ -803,6 +804,43 @@ async function fetchPostDetail() {
 
         alert("서버와 연결할 수 없습니다.");
         window.location.href = "./posts.html";
+        return false;
+    }
+}
+
+
+// 게시글 조회수 증가
+async function increasePostViewCount() {
+    try {
+        const result = await apiRequest(
+            `/posts/${postId}/views`,
+            {
+                method: "POST",
+                skipAuth: true
+            }
+        );
+
+        if (!result.ok) {
+            console.error(
+                "게시글 조회수 증가 실패:",
+                result.status,
+                result.body
+            );
+            return;
+        }
+
+        const updatedViewCount =
+            result.body?.data?.view_count;
+
+        if (typeof updatedViewCount === "number") {
+            viewCount.textContent =
+                String(updatedViewCount);
+        }
+    } catch (error) {
+        console.error(
+            "게시글 조회수 증가 중 오류:",
+            error
+        );
     }
 }
 
@@ -1351,7 +1389,12 @@ async function initializePostDetailPage() {
     }
 
     updateCommentButtonStyle();
-    await fetchPostDetail();
+    const isPostLoaded =
+        await fetchPostDetail();
+
+    if (isPostLoaded) {
+        await increasePostViewCount();
+    }
 }
 
 
